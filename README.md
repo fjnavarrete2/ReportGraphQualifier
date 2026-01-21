@@ -23,3 +23,22 @@ Sigue estos pasos para desplegar el entorno desde cero:
 ```bash
 git clone https://github.com/fjnavarrete2/ReportGraphQualifier.git
 cd ReportGraphQualifier
+
+### 3. Despliegue y activación
+* Activación y arranque de los módulos del docker
+```bash
+docker-compose up -d
+
+* Comprobar que los módulos están activos
+```bash
+docker-compose ps
+
+* Resultado
+```bash
+             Name                            Command               State                       Ports
+------------------------------------------------------------------------------------------------------------------------
+reportgraphqualifier_backend_1    uvicorn api:app --host 0.0 ...   Up      0.0.0.0:8000->8000/tcp,:::8000->8000/tcp
+reportgraphqualifier_database_1   tini -g -- /startup/docker ...   Up      7473/tcp,
+                                                                           0.0.0.0:7474->7474/tcp,:::7474->7474/tcp,
+                                                                           0.0.0.0:7687->7687/tcp,:::7687->7687/tcp
+reportgraphqualifier_frontend_1   docker-entrypoint.sh npm r ...   Up      0.0.0.0:5173->5173/tcp,:::5173->5173/tcp
