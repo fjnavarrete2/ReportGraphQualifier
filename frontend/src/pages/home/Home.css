@@ -1,0 +1,125 @@
+.home {
+    width: 100%;
+    min-height: calc(100vh - 80px); /* Altura de pantalla menos el navbar */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    height: 100vh;
+  }
+  
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .home-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px; /* Aumentamos el ancho máximo del contenedor para dar más aire */
+  text-align: center;
+  color: white;
+  padding: 2rem;
+}
+  
+  .home-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .home-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .home-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;     /* Forzamos a que no salten de línea en escritorio */
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;           /* Reducimos el espacio entre botones de 1rem a 0.8rem */
+  margin-top: 2rem;
+  width: 100%;
+}
+  
+  .home-btn {
+  /* Limpieza de estilos por defecto */
+  text-decoration: none;
+  outline: none;          /* Elimina el marco extra del navegador */
+  box-sizing: border-box; /* Asegura que el borde no sume tamaño extra */
+  
+  /* Borde único */
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  
+  /* Tamaño compacto para que quepan los tres */
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  min-width: 180px;       /* Ancho suficiente pero no excesivo */
+  
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+
+  .home-btn:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+  }
+  
+  .home-btn:hover {
+  background-color: #ffffff;
+  color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Aseguramos que en hover no aparezca otro marco */
+  outline: none;
+  border: 2px solid #ffffff; 
+}
+
+  @media (max-width: 768px) {
+    .home-content h1 {
+      font-size: 2rem;
+    }
+  
+    .home-content p {
+      font-size: 1rem;
+    }
+  
+    .home-buttons {
+    flex-wrap: wrap;
+    flex-direction: column;
+    }
+    .home-btn {
+      width: 80%; /* En móvil que ocupen casi todo el ancho */
+    }
+  }
+
+@media (max-width: 480px) {
+  .home-content {
+    padding: 1rem;
+  }
+
+  .home-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .home-content p {
+    font-size: 0.95rem;
+  }
+}
+  

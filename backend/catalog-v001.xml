@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1747909746065"
+             name="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio"
+             uri="SCPO_Extended_Ontology_V01R08_AT08Q.owl"/>
+    </group>
+</catalog>

@@ -1,0 +1,727 @@
+/* frontend/src/pages/analizador/Analizador.css */
+.analizador-wrapper {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .subtitulo {
+    color: #444;
+    margin-bottom: 2rem;
+  }
+  
+  .analizador-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .archivo-btn {
+    background-color: #1976d2;
+    color: white;
+  }
+
+  .archivo-btn:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+  
+  .archivo-btn:hover {
+    background-color: #12569d;
+  }
+  
+  .analizar-btn {
+    background-color: #c6118d;
+    color: white;
+  }
+
+  .analizar-btn:focus {
+    outline: 2px solid #c6118d;
+    outline-offset: 2px;
+  }
+  
+  .analizar-btn:hover {
+    background-color: #c6118d;
+  }
+
+  .referenciar-btn {
+    background-color: #c64d11;
+    color: white;
+  }
+
+  .referenciar-btn:focus {
+    outline: 2px solid #c64d11;
+    outline-offset: 2px;
+  }
+
+  .resultado-btn {
+    background-color: #0e8814;
+    color: white;
+  }
+
+  .resultado-btn:focus {
+    outline: 2px solid #0e8814;
+    outline-offset: 2px;
+  }
+  
+  .resultado-btn:hover {
+    background-color: #0e8814;
+  }
+
+  .reiniciar-btn {
+    background-color: #757575;
+    color: white;
+  }
+
+  .reiniciar-btn:focus {
+    outline: 2px solid #757575;
+    outline-offset: 2px;
+  }
+  
+  .reiniciar-btn:hover {
+    background-color: #5a5a5a;
+  }
+
+  .visualizacion {
+    margin: 2rem auto;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: height 0.3s ease;
+  }
+  
+  .grafo-container {
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    background-color: #fafafa;
+    border-radius: 8px;
+  }∫  
+
+  .grafo-scroll-zoom {
+    display: block;
+    height: auto;
+    max-width: none;
+    transition: width 0.2s ease;
+  }
+  
+  
+  .grafo-imagen {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+  }  
+  
+  .grafo-frame {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .grafotip {
+    font-style: italic;
+    color: #888;
+  }
+  
+  .resultado {
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  
+  .resultado h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: #222;
+  }
+  
+  .resultado ul {
+    padding-left: 1.2rem;
+  }
+  
+  .resultado li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 1rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .pasos {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .paso {
+    background-color: #f1f1f1;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .paso span {
+    background: #0d47a1;
+    color: white;
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+  }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .popup-loader {
+    text-align: center;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #1976d2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  .zoom-control {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    font-weight: bold;
+  }
+  
+  .zoom-control button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .zoom-control button:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+  
+  .zoom-control button:hover {
+    background-color: #12569d;
+  }
+  
+  
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  
+  @media (max-width: 768px) {
+    .analizador-formulario {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .grafo-frame {
+      height: 300px;
+    }
+  
+    .resultado {
+      padding: 1rem;
+    }
+  }
+
+  /* Nuevos estilos para Neo4j */
+.config-panel-neo4j {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.input-config {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+}
+
+.resultado.success {
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.resultado.error {
+  color: #c62828;
+  background: #ffebee;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.visualizacion {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+@media (max-width: 480px) {
+  .analizador-wrapper {
+    padding: 1rem;
+  }
+
+  .paso {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .zoom-control {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Este es el contenedor que envuelve a las dos columnas */
+.main-content {
+  display: flex;
+  flex-direction: row;    /* Fuerza la disposición horizontal */
+  align-items: flex-start; /* Evita que las tarjetas se estiren verticalmente */
+  justify-content: center;
+  gap: 2rem;              /* Espacio de separación entre columnas */
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Asegura que los hijos ocupen el espacio disponible equitativamente */
+.archivo-container, 
+.resultado-container,
+.procesamiento-grid {
+  flex: 1;                /* Cada uno toma el 50% del ancho */
+  min-width: 400px;       /* Evita que se vuelvan demasiado estrechos */
+  max-width: 650px;       /* Evita que se vuelvan demasiado anchos */
+}
+
+/* Contenedor principal de las tablas */
+/* Expandimos el contenedor al máximo */
+.atestados-wrapper.full-width {
+    max-width: 98% !important; /* Casi el 100% del ancho de pantalla */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin: 0 auto;
+}
+
+/* Contenedor flex de las tablas */
+.tablas-paralelo {
+    display: flex;
+    flex-direction: row;
+    gap: 15px; /* Espacio mínimo entre las dos tablas */
+    width: 100%;
+    margin: 0;
+}
+
+/* Ajuste de las columnas para eliminar márgenes internos innecesarios */
+.columna-tabla {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Forzamos que la tabla ocupe todo su contenedor */
+.status-table {
+    width: 100% !important;
+    table-layout: auto; /* Permite que las columnas se ajusten al contenido largo */
+}
+
+/* Evitamos que el texto largo rompa la tabla, pero permitimos que crezca */
+.status-table td {
+    word-break: break-word; 
+    padding: 8px 4px; /* Reducimos padding interno de las celdas */
+}
+
+/* Contenedor para centrar la bolita en la celda */
+.ref-circle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* La bolita azul con el número */
+.ref-circle-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1976d2; /* El azul que usas en el resto de la app */
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: help; /* Cambia el cursor para indicar que hay información al pasar el ratón */
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ref-circle-badge:hover {
+  background-color: #12569d;
+  transform: scale(1.1);
+}
+
+/* Opcional: Ajustar el ancho de la columna Ref para que no ocupe mucho */
+/* .status-table th:first-child,
+.status-table td:first-child {
+  width: 50px;
+  text-align: center;
+} */
+
+.select-pagination {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.select-pagination:focus {
+  border-color: #1976d2;
+}
+
+.pagination-controls {
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Mejora para los botones de anterior/siguiente */
+.pagination-navigation button {
+  padding: 5px 12px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.pagination-navigation button:not(:disabled):hover {
+  background-color: #e0e0e0;
+  border-color: #bbb;
+}
+
+/* --- Estilos para ResultadoGrafo --- */
+
+.resultado-tabla-wrapper {
+    max-width: 1200px;
+    margin: 2rem auto;
+    width: 95%;
+}
+
+/* Alineaciones y anchos de columna */
+.col-articulo {
+    min-width: 90px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.col-porcentaje {
+    text-align: right !important;
+    padding-right: 25px !important;
+}
+
+.col-centro {
+    text-align: center !important;
+}
+
+/* Botón de Resumen en tabla */
+.btn-resumen-tabla {
+    background: #f0f4f8;
+    border: 1px solid #d1d9e6;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: #1976d2;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.btn-resumen-tabla:hover {
+    background: #e2e8f0;
+    color: #12569d;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Formato de Propiedades */
+.propiedades-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.prop-item {
+    font-size: 0.85rem;
+}
+
+.prop-clave-known {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.prop-clave-unknown {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.prop-valor {
+    color: #000;
+}
+
+
+/* --- Estilos para el Modal de Resumen --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 1100px;
+    height: 85vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #1976d2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-body {
+    flex: 1;
+    overflow: hidden; /* El scroll lo manejará el iframe o el contenido */
+    position: relative;
+    background: #fff;
+}
+
+.modal-footer {
+    padding: 0.8rem 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    text-align: right;
+    background: #f8f9fa;
+}
+
+.btn-cerrar-modal {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-cerrar-modal:hover {
+    background: #5a6268;
+}
+
+/* Estilo para el iframe del resumen */
+.iframe-resumen {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Cargador interno del modal */
+.modal-loader {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.9);
+    z-index: 5;
+}
+
+/*********************/
+
+/* .modal-content.full-screen {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+} */
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Ajuste para que las tablas en el modal no se desborden */
+.modal-body .resultado-card {
+    margin-bottom: 0;
+    height: fit-content;
+}
+
+.modal-body .resultado-tabla-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* .full-width-tables {
+    padding-bottom: 50px; 
+} */
+
+/* Contenedor principal del modal */
+.modal-content.full-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column; /* Alinea header, body y footer verticalmente */
+    background-color: #fff;
+    border-radius: 0;
+    overflow: hidden; /* Evita que el scroll sea del modal entero */
+}
+
+/* El cuerpo del modal es el que debe tener el scroll */
+.modal-body {
+    flex: 1; /* Ocupa todo el espacio disponible entre el header y el footer */
+    overflow-y: auto; /* Habilita el scroll vertical cuando el contenido desborda */
+    padding: 0.75 rem;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Para que las tablas no se corten y respiren */
+.full-width-tables {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 2rem; /* Espacio extra al final */
+}
+
+/* Opcional: Estilizar la barra de scroll para que se vea moderna */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #1976d2;
+}
+
+/* Contenedor específico para desplazar el grafo hacia abajo */
+.canvas-container-modal {
+    margin-top: 40px; /* Ajusta este valor para bajarlo más o menos */
+    height: calc(100vh - 250px); /* Ajustamos el alto para que no se salga por abajo */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+  

@@ -1,0 +1,177 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+nav.navbar {
+  background-color: #656667;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+footer.footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 1rem;
+  background-color: #eee;
+  font-size: 0.9rem;
+}
+
+main {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.intro {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.file-label {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.file-label:hover {
+  background-color: #12569d;
+}
+
+.file-label:focus {
+  outline: 2px solid #12569d;
+  outline-offset: 2px;
+}
+
+.file-preview {
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  margin-right: 1rem;
+}
+
+.btn:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+.btn.primary {
+  background-color: #388e3c;
+  color: white;
+}
+
+.btn.secondary {
+  background-color: #ffa000;
+  color: black;
+}
+
+.loading {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  border: 4px solid #ccc;
+  border-top: 4px solid #1976d2;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.resultado-natural {
+  margin-top: 1rem;
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+hr.divider {
+  margin: 3rem 0;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.error {
+  color: red;
+  margin-top: 1rem;
+}
+
+.main-hero {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.skip-link {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  background-color: #000;
+  color: #fff;
+  z-index: 1000;
+}
+
+/* Esto asegura que el contenedor de la ruta ocupe todo el ancho */
+.main-hero {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* En ResumenGrafo.jsx, usa este estilo para pegar las tablas a los bordes */
+.full-width {
+  width: 100vw;
+  max-width: 100%;
+  padding: 10px 15px; /* Solo un pequeño respiro para que no toquen el cristal */
+  margin: 0;
+}

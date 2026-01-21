@@ -1,0 +1,2443 @@
+{
+    "Report": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Report",
+        "contexto_específico": "Necesitamos analizar las propiedades del atestado o denuncia. ",
+        "preguntas": [
+            {
+                "propiedad": "numero_atestado",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay un número que identifica el atestado o denuncia. Puede haber otros atestados de referencia pues la denuncia puede ser una ampliación de otra pero solo interesa el identificador principal."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identificame el número de atestado o denuncia"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Expresalo en un string con formato año/número"
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "numero_atestado": {"type": "string"}
+                    },
+                    "required": ["respuesta"]
+                }
+            },
+            {
+                "propiedad": "fecha_denuncia",
+                "pre_contexto_extracción_propiedad": {
+                    "default-llm": "Con el número de atestado identificado se necesitan determinar algunas propiedades de la denuncia. Primero la fecha en la que se realiza la denuncia del atestado que estamos analizando, no los de otros atestados antiguos que puedan estar vinculados con este"
+                },
+                "extracción_propiedad": {
+                    "default-llm": "Identifica la fecha en que se realizó la denuncia."
+                },
+                "post_contexto_extracción_propiedad": {
+                    "default-llm": "Expresa el resultado como una fecha en formato dd/mm/yyyy o devuelve vacío"
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "fecha_denuncia": {"type": "string"}
+                    },
+                    "required": ["respuesta"]
+                }
+            }
+        ]
+    },
+    "PropertyCrimeReport": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#PropertyCrimeReport",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenthing",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Pueden haberse robado o hurtado una o varias cosas que vamos a denominar objetos robados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Haz una lista de los objetos robados o hurtados indicados en el '$_elemento'"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de elementos robados expresalos como un array de string en el campo respuesta. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "belongsTo",
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que identificar las victimas a las que se le ha robado. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica la victima o empleado a la que pertenece el objeto '$_elemento'.  Sólo el nombre y apellidos o su denominación si está anonimizado. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado victimas o custodios del objeto robado expresalo como un array de string en el campo respuesta. En el campo referencia, por cada elmento expresado en respuesta una frase explicita que concluya este elemento."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "TheftReport": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#TheftReport",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia existen características especiales de robo. Son características especiales de robo el robo con fuerza o el robo con violencia.\n Son características de robo con fuerza aquellas sustracciones donde el acusado se apodera de cosas ajenas empleando fuerza para acceder o abandonar el lugar donde éstas se encuentran, pudiendo ser estas casa habitada, edificio o local abiertos al público, o una dependencia.\n También se denomina característica de robo con fuerza cuando concurre alguna de las circunstancias siguientes:1. Escalamiento.\n 2. Rompimiento de pared, techo o suelo, o fractura de puerta o ventana.\n 3. Fractura de armarios, cajas fuertes u otra clase de muebles u objetos cerrados o sellados, o forzamiento de sus cerraduras o descubrimiento de sus claves para sustraer su contenido, sea en el lugar del robo o fuera del mismo.\n 4. Uso de llaves falsas. 5. Inutilización de sistemas específicos de alarma o guarda.\n  Son características de robo con violencia cuando los acusados roban cosas a víctimas usando violencia, agrediendo o intimidando explicitamente mediante amenazas a las personas propietarias o que custodian las cosas robadas, sea al cometer el delito, para proteger la huida, o sobre los que acuden en auxilio de la víctima o que le persigan al acusado."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de situaciones que coincidan con características de robo con fuerza (Escalamiento;Rompimiento de pared, techo o suelo, o fractura de puerta o ventana; Fractura de armarios, cajas fuertes , muebles u objetos cerrados o sellados; forzar cerraduras; descubrimiento claves de cajas fuertes;Uso de llaves falsas; Inutilización de sistemas de alarma;) y de robo con violencia (utilizando la fuerza física (violencia) o la intimidación amenazante sin ocultamiento contra una persona), realizadas por el acusado, que aparezcan en el atestado. Sólo señala situaciones explícitas que aparezcan en el atestado"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado situaciones de robo con fuerza o robo con violencia expresalos como un array de string. Si no existen situaciones devuelve una lista vacia. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "stolenthing",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Pueden haberse robado una o varias cosas que vamos a denominar objetos robados"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Haz una lista de los objetos robados indicados en el '$_elemento'"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de elementos robados expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "stolenBy",
+                "llm_preferente": "openai/gpt-5-mini",
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados o denunciados del robo. Pueden existir varios objetos robados por distintos acusados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "TheftByOwner": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#TheftByOwner",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenthing",
+                "tipo": "simple",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Pueden haberse robado una o varias cosas que vamos a denominar objetos robados"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Haz una lista de los objetos robados indicados en el '$_elemento'"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de elementos robados expresalos como un array de string En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "stolenByOwner",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si lo sustraido ha sido robado por el propietario de lo robado aunque el no sea el poseedor del mismo en es instante o tenga delegada la custodia o uso en otra persona."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el propietario o propietarios del objeto '$_elemento' han realizado el robo y no son victimas, realiza la lista de personas que lo han perpetrado.Sólo el nombre y apellidos o su denominación si está anonimizado." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado de personas propietarias que ha robado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article236_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article236_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "ValueCost",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el valor de los elementos robados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de todos los elementos robados en introducelo en el campo ValueCost. No calcules el valor individual sino el total. que debera ser igual para todos los elementos robados pues representa la totalidad del valor." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "ValueCost": {
+                                "type": "number", 
+                                "description": "Valor total mencionado de todos los objetos sustraidos robados."
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article236_1": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article236_1",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+           {
+                "elemento": "ValueCost",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el valor de los elementos robados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de todos los elementos robados en introducelo en el campo ValueCost. No calcules el valor individual sino el total. que debera ser igual para todos los elementos robados pues representa la totalidad del valor." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "ValueCost": {
+                                "type": "number", 
+                                "description": "Valor total mencionado de todos los objetos sustraidos robados."
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "TheftByNotOwner": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#TheftByNotOwner",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenthing",
+                "tipo": "simple",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Pueden haberse robado una o varias cosas que vamos a denominar objetos robados"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Haz una lista de los objetos robados indicados en el '$_elemento'"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de elementos robados expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "usedByOwner",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si lo sustraido estaba en posesión de la víctima o custodiado por la víctima en el momento del robo."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si la víctima estaba en posesión, usando o vigilando el objeto '$_elemento' en el momento que otra persona perpetró el  robo, realiza la lista de estas vpersonas queestaban en posesion o custodiando lo robado." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado de estas personas afectadas expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article235_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "no_preguntas": true,
+        "preguntas": [
+            {
+                "elemento": "hasThingCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si los objetos sustraidos tienen determinadas características o se dan algunas circunstancias. En primer lugar determinar si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el objeto sustraido, '$_elemento', posee alguna de estas característicaso circunstancias, realiza la lista de estas características ." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article235_1_9": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_1_9",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenthing",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Pueden haberse robado una o varias cosas que vamos a denominar objetos robados"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Haz una lista de los objetos robados indicados en el '$_elemento'"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de elementos robados expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string. Si no hay resultados devuelve una lista vacía. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "belongsToCriminalOrganization",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable  pertenecía a una organización criminal. Es decir una banda de criminales organizada o un grupo terrorista"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con las organizaciones criminales a las que pertenece culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article235_1_8": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_1_8",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasAccomplice",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable ha tenido algún complice"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con los complices del culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "Age",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar la edad del culpable o cómplice."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina la edad de '$_elemento' respecto a la fecha del atestado. Es decir los años entre la fecha del atestado y su fecha de nacimiento" 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "Age": {
+                                "type": "number", 
+                                "description": "Edad de la persona afectada calculado como la diferencia entre la fecha de la denuncia y su fecha de nacimiento.  Si no existe la fecha de nacimiento devuelve vacío"
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article235_1_7": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_1_7",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasPreviusSentence",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable hubiera sido condenado ejecutoriamente al menos por tres delitos de robo o hurto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con el numero de detenciones." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "num",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el número total de detenciones."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de las detenciones que constan del acusado '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "num": {
+                                "type": "number",
+                                "description": "Número total de detenciones sufridas por el acusado."
+                                }
+                            },
+                            "required": ["num"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            } 
+        ]
+    },
+    "Article235_1_6": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_1_6",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceAggravatingFactor",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si se ha puesto a la víctima o a su familia en grave situación económica o se ha realizado abusando de sus circunstancias personales o de su situación de desamparo, o aprovechando la producción de un accidente o la existencia de un riesgo o peligro general para la comunidad que haya debilitado la defensa del ofendido o facilitado la comisión impune del delito."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza la lista de estas características." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article235_1_1-5": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article235_1_1-5",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasThingCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si los objetos sustraidos tienen determinadas características o se dan algunas circunstancias. En primer lugar determinar si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el objeto sustraido, '$_elemento', posee alguna de estas característicaso circunstancias, realiza la lista de estas características ." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article234_3": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article234_3",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si se han neutralizado, eliminado o inutilizados dispositivos de alarma o seguridad instalados para robar."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza la lista de estas características." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article234_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article234_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        
+        "preguntas": [
+            {
+                "elemento": "ValueCost",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el valor de los elementos robados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de todos los elementos robados en introducelo en el campo ValueCost. No calcules el valor individual sino el total. que debera ser igual para todos los elementos robados pues representa la totalidad del valor." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "ValueCost": {
+                                "type": "number", 
+                                "description": "Valor total mencionado de todos los objetos sustraidos robados."
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article234_1": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article234_1",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "ValueCost",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el valor de los elementos robados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de todos los elementos robados en introducelo en el campo ValueCost. No calcules el valor individual sino el total. que debera ser igual para todos los elementos robados pues representa la totalidad del valor." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "ValueCost": {
+                                "type": "number", 
+                                "description": "Valor total mencionado de todos los objetos sustraidos robados."
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "RobberyReport": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#RobberyReport",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia existen características especiales de robo. Son características especiales de robo el robo con fuerza o el robo con violencia.\n Son características de robo con fuerza aquellas sustracciones donde el acusado se apodera de cosas ajenas empleando fuerza para acceder o abandonar el lugar donde éstas se encuentran, pudiendo ser estas casa habitada, edificio o local abiertos al público, o una dependencia.\n También se denomina característica de robo con fuerza cuando concurre alguna de las circunstancias siguientes:1. Escalamiento.\n 2. Rompimiento de pared, techo o suelo, o fractura de puerta o ventana.\n 3. Fractura de armarios, cajas fuertes u otra clase de muebles u objetos cerrados o sellados, o forzamiento de sus cerraduras o descubrimiento de sus claves para sustraer su contenido, sea en el lugar del robo o fuera del mismo.\n 4. Uso de llaves falsas. 5. Inutilización de sistemas específicos de alarma o guarda.\n  Son características de robo con violencia cuando los acusados roban cosas a víctimas usando violencia, agrediendo o intimidando explicitamente mediante amenazas a las personas propietarias o que custodian las cosas robadas, sea al cometer el delito, para proteger la huida, o sobre los que acuden en auxilio de la víctima o que le persigan al acusado."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de situaciones que coincidan con características de robo con fuerza (Escalamiento;Rompimiento de pared, techo o suelo, o fractura de puerta o ventana; Fractura de armarios, cajas fuertes , muebles u objetos cerrados o sellados; forzar cerraduras; descubrimiento claves de cajas fuertes;Uso de llaves falsas; Inutilización de sistemas de alarma;) y de robo con violencia (utilizando la fuerza física (violencia) o la intimidación amenazante sin ocultamiento contra una persona), realizadas por el acusado, que aparezcan en el atestado. Sólo señala situaciones explícitas que aparezcan en el atestado"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado situaciones de robo con fuerza o robo con violencia expresalos como un array de string. Si no existen situaciones devuelve una lista vacia. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "stolenBy",
+                "llm_preferente": "openai/gpt-5-mini",
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados o denunciados del robo. Pueden existir varios objetos robados por distintos acusados."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado victimas o custodios del objeto robado expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article242": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia existen características especiales de robo con violencia. Son características de robo con violencia cuando los acusados roban cosas a víctimas usando violencia, agrediendo o intimidando explicitamente mediante amenazas a las personas propietarias o que custodian las cosas robadas, sea al cometer el delito, para proteger la huida, o sobre los que acuden en auxilio de la víctima o que le persigan al acusado."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de situaciones que coincidan con características de robo con violencia (utilizando la fuerza física (violencia) o la intimidación amenazante sin ocultamiento contra una persona), realizadas por el acusado, que aparezcan en el atestado. Sólo señala situaciones explícitas que aparezcan en el atestado"
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado situaciones de robo con violencia expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article242_4": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242_4",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasMitigatingFactor",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable uso la violencia pero con poca entidad o intimidación muy leve. Es decir intimidación verbal muy leve que otras personas no consideren casi intimidación."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con los ejemplos de violencia o intimidación leve que ha realizado el denunnciado '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article242_3": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242_3",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasAggravatingFactor",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable hizo uso de armas u otros medios igualmente peligrosos."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con las armas que uso el culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article242_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": " Hay que determinar si en la denuncia se determina si el acto con violencia se ha cometido para acceder y robar en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias. Fuera de las horas de apertura, personas, aunque accidentalmente se encuentren ausentes de ella cuando el robo tenga lugar."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de casas, local o lugares que han sido robados utilizando la violencia para acceder a ellos. "
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado expresalos como un array de string. Si no se ha forzado cerradura, ventana, techo, alarma o similar devuelve una lista vacía. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article242_2_4": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242_2_4",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasMitigatingFactor",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable uso la violencia pero con poca entidad o intimidación muy leve. Es decir intimidación verbal muy leve que otras personas no consideren casi intimidación."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con los ejemplos de violencia o intmidación leve que ha realizado el denunnciado '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article242_2_3": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article242_2_3",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasAggravatingFactor",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable hizo uso de armas u otros medios igualmente peligrosos."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con las armas que uso el culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_1": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_1",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia se determina si el robo con fuerza (Escalamiento;Rompimiento de pared, techo o suelo, o fractura de puerta o ventana; Fractura de armarios, cajas fuertes , muebles u objetos cerrados o sellados; forzar cerraduras; descubrimiento claves de cajas fuertes;Uso de llaves falsas; Inutilización de sistemas de alarma;) se ha cometido en casa habitada, edificio o local abiertos al público, o en cualquiera de sus dependencias ytilizndo . Fuera de las horas de apertura, personas, aunque accidentalmente se encuentren ausentes de ella cuando el robo tenga lugar."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de casas, local o lugares que han sido forzados sus sistemas de seguridad, puertas o ventanas. "
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado expresalos como un array de string. Si no se ha forzado cerradura, ventana, techo, alarma o similar devuelve una lista vacía. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article241_4_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasThingCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si los objetos sustraidos tienen determinadas características o se dan algunas circunstancias. En primer lugar determinar si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el objeto sustraido, '$_elemento', posee alguna de estas característicaso circunstancias, realiza la lista de estas características ." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_4_1_9": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_1_9",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "belongsToCriminalOrganization",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable pertenece a una organización criminal"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con las organizaciones criminales a las que pertenece culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_4_1_8": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_1_8",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasAccomplice",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable ha tenido algún complice"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con los complices del culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "Age",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar la edad del culpable o cómplice."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina la edad del '$_elemento' respecto a la fecha del atestado. Es decir los años entre la fecha del atestado y su fecha de nacimiento" 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "Age": {
+                                "type": "number", 
+                                "description": "Edad de la persona afectada calculado como la diferencia entre la fecha de la denuncia y su fecha de nacimiento.  Si no existe la fecha de nacimiento devuelve vacío"
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_4_1_7": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_1_7",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+           {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasPreviusSentence",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable hubiera sido condenado ejecutoriamente al menos por tres delitos de robo o hurto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con el numero de detenciones." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "num",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el número total de detenciones."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de las detenciones que constan del acusado '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "num": {
+                                "type": "number",
+                                "description": "Número total de detenciones sufridas por el acusado."
+                                }
+                            },
+                            "required": ["num"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            } 
+        ]
+    },
+    "Article241_4_1_6": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_1_6",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceAggravatingFactor",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si se ha puesto a la víctima o a su familia en grave situación económica o se ha realizado abusando de sus circunstancias personales o de su situación de desamparo, o aprovechando la producción de un accidente o la existencia de un riesgo o peligro general para la comunidad que haya debilitado la defensa del ofendido o facilitado la comisión impune del delito."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza la lista de estas características." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_4_1-5": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4_1-5",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasThingCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si los objetos sustraidos tienen determinadas características o se dan algunas circunstancias. En primer lugar determinar si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el objeto sustraido, '$_elemento', posee alguna de estas característicaso circunstancias, realiza la lista de estas características ." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article241_4": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article241_4",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceAggravatingFactor",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia se determina si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. También si se ha puesto a la víctima o a su familia en grave situación económica o se ha realizado abusando de sus circunstancias personales o de su situación de desamparo, o aprovechando la producción de un accidente o la existencia de un riesgo o peligro general para la comunidad que haya debilitado la defensa del ofendido o facilitado la comisión impune del delito."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de los daños graves causados."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article240_1": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_1",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia existen características de robo con fuerza. Son características de robo con fuerza aquellas sustracciones donde el acusado se apodera de cosas ajenas empleando fuerza para acceder o abandonar el lugar donde éstas se encuentran, pudiendo ser estas casa habitada, edificio o local abiertos al público, o una dependencia. También se denomina característica de robo con fuerza cuando concurre alguna de las circunstancias siguientes:1. Escalamiento. 2. Rompimiento de pared, techo o suelo, o fractura de puerta o ventana. 3. Fractura de armarios, cajas fuertes u otra clase de muebles u objetos cerrados o sellados, o forzamiento de sus cerraduras o descubrimiento de sus claves para sustraer su contenido, sea en el lugar del robo o fuera del mismo. 4. Uso de llaves falsas. 5. Inutilización de sistemas específicos de alarma o guarda." 
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de situaciones que coincidan con características de robo con fuerza (Escalamiento;Rompimiento de pared, techo o suelo, o fractura de puerta o ventana; Fractura de armarios, cajas fuertes , muebles u objetos cerrados o sellados; forzar cerraduras; descubrimiento claves de cajas fuertes;Uso de llaves falsas; Inutilización de sistemas de alarma;)."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado situaciones de robo con fuerza expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article240_2_2": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_2",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si en la denuncia existen características especiales de robo con fuerza. Son características especiales de robo el robo con fuerza  aquellas sustracciones donde el acusado se apodera de cosas ajenas empleando fuerza para acceder o abandonar el lugar donde éstas se encuentran, pudiendo ser estas casa habitada, edificio o local abiertos al público, o una dependencia.\n También se denomina característica de robo con fuerza cuando concurre alguna de las circunstancias siguientes:1. Escalamiento.\n 2. Rompimiento de pared, techo o suelo, o fractura de puerta o ventana.\n 3. Fractura de armarios, cajas fuertes u otra clase de muebles u objetos cerrados o sellados, o forzamiento de sus cerraduras o descubrimiento de sus claves para sustraer su contenido, sea en el lugar del robo o fuera del mismo.\n 4. Uso de llaves falsas. 5. Inutilización de sistemas específicos de alarma o guarda."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista de situaciones que coincidan con características de robo con fuerza (Escalamiento;Rompimiento de pared, techo o suelo, o fractura de puerta o ventana; Fractura de armarios, cajas fuertes , muebles u objetos cerrados o sellados; forzar cerraduras; descubrimiento claves de cajas fuertes;Uso de llaves falsas; Inutilización de sistemas de alarma)."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado expresalos como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            }
+        ]
+    },
+    "Article240_2_1_9": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_1_9",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "belongsToCriminalOrganization",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable pertenece a una organización criminal"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con las organizaciones criminales a las que pertenece culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article240_2_1_8": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_1_8",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string.  En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasAccomplice",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable ha tenido algún complice"
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con los complices del culpable '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "Age",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar la edad del culpable o cómplice."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina la edad de '$_elemento' respecto a la fecha del atestado. Es decir los años entre la fecha del atestado y su fecha de nacimiento" 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "Age": {
+                                "type": "number", 
+                                "description": "Edad de la persona afectada calculado como la diferencia entre la fecha de la denuncia y su fecha de nacimiento.  Si no existe la fecha de nacimiento devuelve vacío"
+                            }
+                            },
+                            "required": ["ValueCost"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article240_2_1_7": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_1_7",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "stolenBy",
+                
+                "pre_contexto_extracción_objetos": { 
+                    "default-llm": "Hay que determinar quien ha sustraido los objetos robados para determinar los acusados del robo. Se quiere conocer la relación entre objeto robado y acusado. Pueden existir varios objetos robados por distintos acusados. Si el objeto robado pertenece a una empresa o compañia hay que relacionar objeto robado con el empleado que custodiaba o es responsable del objeto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Identifica los acusados o denunciados que han realizado el robo del objeto '$_elemento'. Sólo el nombre y apellidos o su denominación si está anonimizado."
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "Los resultados del listado de acusados expresalo como un array de string. En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                },
+                "propiedades": []
+            },
+            {
+                "elemento": "hasPreviusSentence",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si en el momento de delinquir el culpable hubiera sido condenado ejecutoriamente al menos por tres delitos de robo o hurto."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza una lista con el numero de detenciones." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.En el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            },
+            {
+                "elemento": "num",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar el número total de detenciones."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Determina el valor total de las detenciones que constan del acusado '$_elemento'." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un valor numérico."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                        "properties": {
+                            "respuesta": {
+                            "type": "object",
+                            "properties": {
+                                "num": {
+                                "type": "number",
+                                "description": "Número total de detenciones sufridas por el acusado."
+                                }
+                            },
+                            "required": ["num"],
+                            "additionalProperties": false
+                            }
+                        },
+                        "required": ["respuesta"],
+                        "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article240_2_1_6": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_1_6",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasOffenceAggravatingFactor",
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Hay que determinar si se ha puesto a la víctima o a su familia en grave situación económica o se ha realizado abusando de sus circunstancias personales o de su situación de desamparo, o aprovechando la producción de un accidente o la existencia de un riesgo o peligro general para la comunidad que haya debilitado la defensa del ofendido o facilitado la comisión impune del delito."
+                },
+                "extracción_objetos": {
+                    "default-llm": "Realiza la lista de estas características." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {"type": "array", 
+                                    "items": {"type": "string"}
+                                },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        }
+                    },
+                    "required": ["respuesta", "referencia"],
+                    "additionalProperties": false
+                }
+            }
+        ]
+    },
+    "Article240_2_1_1-5": {
+        "iri": "http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Article240_2_1_1-5",
+        "contexto_específico": "Eres un agente jurídico. Contesta de manera determinística en base al atestado que se te adjunta.",
+        "preguntas": [
+            {
+                "elemento": "hasThingCharacteristic",
+                
+                "pre_contexto_extracción_objetos": {
+                    "default-llm": "Se debe determinar si los objetos sustraidos tienen determinadas características o se dan algunas circunstancias. En primer lugar determinar si lo sustraido son cosas de valor artístico , histórico , cultural o científico. Cuando se trate de cosas de primera necesidad y se cause una situación de desabastecimiento. Cuando se trate de conducciones, cableado, equipos o componentes de infraestructuras de suministro eléctrico, de hidrocarburos o de los servicios de telecomunicaciones, o de otras cosas destinadas a la prestación de servicios de interés general, y se cause un quebranto grave a los mismos. Cuando se trate de productos agrarios o ganaderos, o de los instrumentos o medios que se utilizan para su obtención, siempre que el delito se cometa en explotaciones agrícolas o ganaderas y se cause un perjuicio grave a las mismas. Cuando revista especial gravedad, atendiendo al valor de los efectos sustraídos, o se produjeren perjuicios de especial consideración. "
+                },
+                "extracción_objetos": {
+                    "default-llm": "Si el objeto sustraido, '$_elemento', posee alguna de estas característicaso circunstancias, realiza la lista de estas características ." 
+                },
+                "post_contexto_extracción_objetos": {
+                    "default-llm": "El resultado expresalo como un array de string. Si no aparecen en el atestado devuelve una lista vacía.Frase textEn el campo referencia, por cada elemento identificado en respuesta una sub-lista de fragmentos textuales del documento/texto que concluya la existencia de este elemento. Tienen que ser fragmentos explícitos, sin cambios respecto al texto, pues luego se utilizarán para referenciar en el texto su ubicación."
+                },
+                "formato_extraccion": {
+                    "type": "object",
+                    "properties": {
+                        "respuesta": {
+                                        "type": "array", 
+                                        "items": {"type": "string"}
+                                    },
+                        "referencia": {
+                                        "type": "array",
+                                        "description": "Lista que contiene una sub-lista de fragmentos textuales del documento por cada elemento identificado, que determinan y concluyen el resultado. Genera una sublista de fragmentos por cada elemento identificado he insertalo como item en la lista referencia. Si no se identifica ningún elemento en resultado se devuelve una lista vacía como referencia.",
+                                        "items": {
+                                                "type": "array",
+                                                "description": "Lista de fragmentos de texto (strings) asociados a un elemento. Si no encuentras fragmentos para un elemento incluye un item lista vacía en referencia.",
+                                                "items": {
+                                                "type": "string",
+                                                "description": "Un fragmento textual individual extraído del documento."
+                                                }
+						                }
+                        },
+                        "required": ["respuesta", "referencia"],
+                        "additionalProperties": false
+                    }   
+                }
+            }
+        ]
+    }
+}

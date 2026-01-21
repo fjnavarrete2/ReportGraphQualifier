@@ -1,0 +1,18 @@
+# Docker y Datos
+backend/import/*.*
+
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+
+# Node/React
+node_modules/
+dist/
+.eslintcache
+
+# IDEs
+.vscode/
+.devcontainer/ (opcional: súbelo si quieres compartir tu config de VS Code)

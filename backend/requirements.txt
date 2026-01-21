@@ -1,0 +1,32 @@
+# FastAPI y servidor
+fastapi
+uvicorn[standard]
+
+# Manipulación de archivos y documentos
+python-multipart
+python-docx
+PyMuPDF
+
+# Lógica de negocio y estructuras
+pydantic
+platformdirs
+python-dotenv
+
+
+# Razonamiento ontológico
+owlready2
+rdflib>=7.0.0
+
+# HTTP y APIs
+requests
+openai>=2.15.0
+
+# Otros (por dependencias internas y compatibilidad)
+aiofiles
+
+#Neo4j
+neo4j>=6.1.0
+
+#rdflib-rdfstar
+# Elimina: rdflib-rdfstar
+

@@ -1,0 +1,346 @@
+{
+  "es": {
+    "home": {
+      "title": "Calificador de atestados gráfico",
+      "description": "Herramienta jurídica de apoyo que procesa atestados y grafos RDF para calificar automáticamente artículos jurídicos aplicables.",
+      "btn_process": "Procesamiento de atestado con IA",
+      "btn_visualize": "Visualización de resúmenes y resultados"
+    },
+    "common": {
+      "back": "Volver",
+      "close": "Cerrar",
+      "loading": "Cargando...",
+      "success": "Éxito",
+      "error": "Error",
+      "pending": "Pendiente",
+      "search": "Buscar...",
+      "status": {
+        "ok": "● Éxito",
+        "error": "● Error",
+        "waiting": "○ Esperando"
+      },
+      "pagination": {
+        "show": "Mostrar:",
+        "rows": "filas",
+        "prev": "Anterior",
+        "next": "Siguiente",
+        "page_of": "Página ",
+        "page_of2": " de "
+      }
+    },
+    "atestados": {
+	  "principalTitle": "Procesamiento de Atestado con IA",
+	  "subtittle": "Sube un documento (PDF/DOCX) para extraer entidades, generar el grafos e importar a Neo4j.",
+      "title": "Procesamiento de Atestado con IA",
+      "subtitle": "Sube un documento (PDF/DOCX) para extraer entidades, generar grafos e importar a Neo4j.",
+      "steps": {
+        "step1": "Selecciona",
+        "step2": "Procesa",
+        "step3": "Descarga",
+        "step4": "Infiere",
+        "step5": "Importa"
+      },
+      "btns": {
+        "select": "Seleccionar archivo",
+        "process": "Procesar documento",
+        "download": "Descargar grafo",
+        "infer": "Inferir grafo TTLs",
+        "import": "Importar a Neo4j"
+      },
+      "preview": {
+        "no_file": "Sin archivo seleccionado",
+        "delete": "Eliminar archivo"
+      },
+      "panel": {
+        "title": "Panel de Control de Procesos",
+        "col_action": "Acción",
+        "col_status": "Estado",
+        "col_detail": "Detalle",
+        "actions": {
+          "process": "Procesar Documento",
+          "download": "Descargar Grafo RDF",
+          "infer": "Inferir Grafo TTLS",
+          "import": "Importación a Neo4j"
+        }
+      },
+      "debug": {
+        "title": "Inspeccionar Respuesta Técnica (JSON)",
+        "no_data": "No hay datos técnicos disponibles para esta acción."
+      },
+      "loading": {
+        "title": "La IA está analizando el atestado...",
+        "wait": "Esto puede tardar unos segundos"
+      },
+      "messages": {
+        "waiting": "-",
+        "success": "Finalizado con éxito",
+        "error": "Error en el proceso"
+      }
+    },
+    "analizador": {
+      "title": "Visualización de Resúmenes y Resultados",
+      "subtitle": "Sube un documento (PDF/DOCX) para referenciar el atestado, visualizar resúmenes de grafos y resultados del análisis.",
+      "steps": {
+        "step1": "Selecciona archivo",
+        "step2": "Referencia atestado",
+        "step3": "Visualiza resumen",
+        "step4": "Visualiza resultados"
+      },
+      "btns": {
+        "select": "Seleccionar archivo",
+        "references": "Visualizar Fuentes",
+        "summary": "Resumen Atestado",
+        "results": "Resultados Atestado"
+      },
+      "preview": {
+        "no_file": "Sin archivo seleccionado",
+        "delete": "Eliminar archivo"
+      },
+      "panel": {
+        "title": "Estado del Procesamiento",
+        "col_process": "Proceso",
+        "col_status": "Estado",
+        "col_detail": "Detalle",
+        "rows": {
+          "references": "Análisis de Fuentes",
+          "summary": "Resumen del Atestado",
+          "results": "Resultados de la calificación"
+        }
+      },
+      "debug": {
+        "title": "Inspeccionar Respuesta Técnica (JSON)",
+        "waiting": "Esperando ejecución..."
+      },
+      "loading": {
+        "references": "Descargando fuentes...",
+        "summary": "Generando resumen de tuplas desde el grafo...",
+        "results": "Calculando probabilidades de artículos..."
+      },
+      "ok": {
+        "references": "fuentes encontradas",
+        "summary":  "relaciones y entidades encontradas",
+        "results": "artículos analizados"
+      },
+      "viewer": "Visor de Documento"
+    },
+    "resultado": {
+      "title": "Resultados del atestado",
+      "prob_table_title": "Probabilidad de calificación por artículo",
+      "col_article": "Artículo",
+      "col_prob": "Probabilidad",
+      "col_uncert": "Incertidumbre",
+      "col_props": "Características",
+      "col_summary": "Resumen",
+      "col_graph": "Grafo",
+      "modal": {
+        "graph_title": "Visor de Grafo: ",
+        "summary_title": "Tablas de Resumen: ",
+        "for_report": " para el atestado ",
+        "close": "Cerrar Ventana",
+        "ontology_rel": "Relaciones de la Ontología",
+        "entities_nodes": "Entidades y Nodos",
+        "for": "para el atestado"
+      }
+    },
+    "resumen_tabla": {
+      "summary_view_title": "Resumen del atestado",
+      "panel": {
+        "rows": {
+          "summary": "Relaciones",
+          "nodes": "Entidades/Nodos"
+        }
+      }
+    },
+    "grafo": {
+      "cols": {
+        "ref": "Ref",
+        "origin": "Origen",
+        "relation": "Relación",
+        "dest": "Destino",
+        "element": "Elemento",
+        "labels": "Etiquetas (Clases)",
+        "props": "Propiedades Extraídas"
+      },
+      "adjust": "Ajustar"
+    },
+	"footer": {
+      "copyright": "© 2026 Universidad de Málaga"
+    },
+	"navbar": {
+      "process": "Procesamiento de Atestado",
+      "visualize": "Visualización de resúmenes y resultados"
+    }
+  },
+  "en": {
+    "home": {
+      "title": "Graphical Report Qualifier",
+      "description": "Legal support tool that processes police reports and RDF graphs to automatically qualify applicable legal articles.",
+      "btn_process": "AI Report Processing",
+      "btn_visualize": "Summary & Results Visualization"
+    },
+    "common": {
+      "back": "Back",
+      "close": "Close",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "pending": "Pending",
+      "search": "Search...",
+      "status": {
+        "ok": "● Success",
+        "error": "● Error",
+        "waiting": "○ Waiting"
+      },
+      "pagination": {
+        "show": "Show:",
+        "rows": "rows",
+        "prev": "Previous",
+        "next": "Next",
+        "page_of": "Page ",
+        "page_of2": " of "
+      }
+    },
+    "atestados": {
+      "principalTitle": "AI-powered Report Processing",
+      "subtittle": "Upload a document (PDF/DOCX) to extract entities, generate graphs, and import them into Neo4j.",
+      "title": "AI Report Processing",
+      "subtitle": "Upload a document (PDF/DOCX) to extract entities, generate graphs, and import to Neo4j.",
+      "steps": {
+        "step1": "Select",
+        "step2": "Process",
+        "step3": "Download",
+        "step4": "Infer",
+        "step5": "Import"
+      },
+      "btns": {
+        "select": "Select file",
+        "process": "Process document",
+        "download": "Download graph",
+        "infer": "Infer TTLs graph",
+        "import": "Import to Neo4j"
+      },
+      "preview": {
+        "no_file": "No file selected",
+        "delete": "Delete file"
+      },
+      "panel": {
+        "title": "Process Control Panel",
+        "col_action": "Action",
+        "col_status": "Status",
+        "col_detail": "Detail",
+        "actions": {
+          "process": "Process Document",
+          "download": "Download RDF Graph",
+          "infer": "Infer TTLS Graph",
+          "import": "Neo4j Import"
+        }
+      },
+      "debug": {
+        "title": "Inspect Technical Response (JSON)",
+        "no_data": "No technical data available for this action."
+      },
+      "loading": {
+        "title": "AI is analyzing the report...",
+        "wait": "This may take a few seconds"
+      },
+      "messages": {
+        "waiting": "-",
+        "success": "Completed successfully",
+        "error": "Process error"
+      }
+    },
+    "analizador": {
+      "title": "Summary & Results Visualization",
+      "subtitle": "Upload a document (PDF/DOCX) to reference the report, visualize graph summaries, and analysis results.",
+      "steps": {
+        "step1": "Select file",
+        "step2": "Reference report",
+        "step3": "View summary",
+        "step4": "View results"
+      },
+      "btns": {
+        "select": "Select file",
+        "references": "View Sources",
+        "summary": "Report Summary",
+        "results": "Report Results"
+      },
+      "preview": {
+        "no_file": "No file selected",
+        "delete": "Delete file"
+      },
+      "panel": {
+        "title": "Processing Status",
+        "col_process": "Process",
+        "col_status": "Status",
+        "col_detail": "Detail",
+        "rows": {
+          "references": "Sources Analysis",
+          "summary": "Report Summary",
+          "results": "Qualification Results"
+        }
+      },
+      "debug": {
+        "title": "Inspect Technical Response (JSON)",
+        "waiting": "Waiting for execution..."
+      },
+      "loading": {
+        "references": "Downloading sources...",
+        "summary": "Generating tuple summary from graph...",
+        "results": "Calculating article probabilities..."
+      },
+      "ok": {
+        "references": "sources found",
+        "summary": "rellationships ans entities found",
+        "results": "analysed items"
+      },
+      "viewer": "Document Viewer"
+    },
+    "resultado": {
+      "title": "Report Results",
+      "prob_table_title": "Qualification probability per article",
+      "col_article": "Article",
+      "col_prob": "Probability",
+      "col_uncert": "Uncertainty",
+      "col_props": "Characteristics",
+      "col_summary": "Summary",
+      "col_graph": "Graph",
+      "modal": {
+        "graph_title": "Graph Viewer: ",
+        "summary_title": "Summary Tables: ",
+        "for_report": " for report ",
+        "close": "Close Window",
+        "ontology_rel": "Ontology Relations",
+        "entities_nodes": "Entities and Nodes",
+        "for": "for report"
+      }
+    },
+    "resumen_tabla": {
+      "summary_view_title": "Report Summary",
+      "panel": {
+        "rows": {
+          "summary": "Relations",
+          "nodes": "Entities/Nodes"
+        }
+      }
+    },
+    "grafo": {
+      "cols": {
+        "ref": "Ref",
+        "origin": "Origin",
+        "relation": "Relation",
+        "dest": "Destination",
+        "element": "Element",
+        "labels": "Labels (Classes)",
+        "props": "Extracted Properties"
+      },
+      "adjust": "Adjust"
+    },
+	"footer": {
+      "copyright": "© 2026 University of Malaga"
+    },
+	"navbar": {
+      "process": "Report Processing",
+      "visualize": "Summary & Results Visualization"
+    }
+  }
+}

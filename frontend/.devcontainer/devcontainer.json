@@ -1,0 +1,15 @@
+{
+  "name": "Frontend React Docker",
+  "dockerComposeFile": ["../../docker-compose.yml"], // Sube dos niveles hasta la raíz
+  "service": "frontend",
+  "workspaceFolder": "/app", 
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "dsznajder.es7-react-js-snippets"
+      ]
+    }
+  }
+}
