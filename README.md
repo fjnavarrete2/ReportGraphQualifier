@@ -24,7 +24,6 @@ Sigue estos pasos para desplegar el entorno desde cero:
 git clone https://github.com/fjnavarrete2/ReportGraphQualifier.git
 cd ReportGraphQualifier
 
-### 3. Despliegue y activación
 * Activación y arranque de los módulos del docker
 ```bash
 docker-compose up -d
