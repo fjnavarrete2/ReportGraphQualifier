@@ -43,9 +43,10 @@
       "btns": {
         "select": "Seleccionar archivo",
         "process": "Procesar documento",
-        "download": "Descargar grafo",
+        "download": "Descargar RDF",
         "infer": "Inferir grafo TTLs",
-        "import": "Importar a Neo4j"
+        "import": "Importar a Neo4j",
+        "download_tooltip": "Para agilizar las pruebas de generación de grafos y la importación en Neo4j, carga un fichero json de procesamiento"
       },
       "preview": {
         "no_file": "Sin archivo seleccionado",
@@ -217,7 +218,8 @@
         "process": "Process document",
         "download": "Download graph",
         "infer": "Infer TTLs graph",
-        "import": "Import to Neo4j"
+        "import": "Import to Neo4j",
+        "download_tooltip": "To streamline graph generation testing and importing into Neo4j, upload a processing JSON file"
       },
       "preview": {
         "no_file": "No file selected",

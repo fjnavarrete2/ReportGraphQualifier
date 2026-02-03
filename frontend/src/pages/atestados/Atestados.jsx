@@ -1,7 +1,7 @@
 import './Atestados.css';
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { FiUpload, FiTrash2, FiDownload, FiLoader, FiSearch, FiDatabase, FiShare2 } from 'react-icons/fi';
+import { FiUpload, FiTrash2, FiDownload, FiLoader, FiSearch, FiDatabase, FiShare2, FiFileText } from 'react-icons/fi';
 import docs from '../../assets/docs.png';
 import noArchivo from '../../assets/noArchivo.png';
 // O si instalas lucide-react (muy recomendado para grafos):
@@ -19,10 +19,14 @@ export default function Atestados() {
   const [inferring, setInferring] = useState(false); // Nuevo estado para la inferencia
   const { t } = useApp();
 
+  const jsonFileInputRef = useRef(null);
+
   // Dentro de Atestados()
 const [importing, setImporting] = useState(false);
 const [importSuccess, setImportSuccess] = useState(null); // Almacenará el mensaje detallado
 const [ttlBlob, setTtlBlob] = useState(null);
+
+const [taskId, setTaskId] = useState(null);
 
 // Estado para controlar el historial de acciones
 // const [actionHistory, setActionHistory] = useState({
@@ -69,6 +73,9 @@ const ARTICULOS_DEFAULT = [
   "Article242_2", "Article242_3", "Article242_4"
 ];
 
+// // Referencia para limpiar el intervalo de polling
+//   const pollingRef = useRef(null);
+
   // Manejo de accesibilidad para el popup de carga
   useEffect(() => {
     if (!popup) return;
@@ -80,11 +87,99 @@ const ARTICULOS_DEFAULT = [
         e.preventDefault();
         setPopup(false);
       }
+      
     };
-
     overlay?.addEventListener('keydown', handleKey);
-    return () => overlay?.removeEventListener('keydown', handleKey);
+    // return () => overlay?.removeEventListener('keydown', handleKey);
+    return () => { 
+      overlay?.removeEventListener('keydown', handleKey); 
+    };
   }, [popup]);
+
+  // --- EFECTO DE POLLING ---
+  // Este efecto se dispara en cuanto setTaskId tiene un valor
+  useEffect(() => {
+    let intervalId;
+
+    if (taskId) {
+      intervalId = setInterval(async () => {
+        try {
+          console.log("Consultando estado de la tarea:", taskId);
+          const response = await axios.get(`http://localhost:8000/check_task/${taskId}`);
+          const { status, result } = response.data;
+            if (status === 'completado') {
+              clearInterval(intervalId);
+              setTaskId(null); // Detenemos el polling
+              setLoading(false);
+              setPopup(false);
+              setResultado(result.grafo_json);
+              setDebugJson(result.grafo_json);
+              if (result) {
+                // 1. Extraer el nombre del archivo del atributo específico
+                const fileName = result.archivo_procesado || 'resultado_analisis.json';
+                
+                // 2. Crear un Blob con el contenido JSON
+                const jsonString = JSON.stringify(result.grafo_json, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                
+                // 3. Crear un link temporal y disparar el clic
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName.endsWith('.json') ? fileName : `${fileName}.json`;
+                
+                document.body.appendChild(link);
+                link.click();
+                
+                // 4. Limpieza
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+              }
+            setActionHistory(prev => ({ 
+              ...prev, 
+              procesar: { status: 'ok', msgKey: 'atestados.msg.success' } 
+            }));
+          } 
+          else if (status === 'error') {
+            console.log("La tarea da error...");
+            clearInterval(intervalId);
+            setTaskId(null);
+            setLoading(false);
+            setPopup(false);
+            setActionHistory(prev => ({ 
+              ...prev, 
+              procesar: { status: 'error', msgKey: 'atestados.msg.error' } 
+            }));
+          }
+          else {
+            // AQUÍ EL "ELSE": El proceso sigue pendiente (status === 'procesando' o similar)
+            // No cerramos el popup, solo nos aseguramos de que el estado visual sea correcto
+            setPopup(true);
+            console.log("La tarea sigue en curso...");
+            // setActionHistory(prev => ({ 
+            //   ...prev, 
+            //   procesar: { status: 'procesando', msgKey: 'atestados.msg.processing' } 
+            // }));
+          }
+        } catch (err) {
+          console.error("Error consultando estado:", err);
+          clearInterval(intervalId);
+          setTaskId(null);
+          setLoading(false);
+          setPopup(false);
+        }
+      }, 3000); // 3 segundos
+    }
+      // else 
+      //   setPopup(true);  
+
+    // Limpieza al desmontar o cambiar taskId
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [taskId]);
+
+
 
   const handleChange = (e) => {
     const selected = e.target.files[0];
@@ -113,9 +208,20 @@ const ARTICULOS_DEFAULT = [
   const handleUpload = async () => {
     if (!file) return;
 
+    // setLoading(true);
+    // setPopup(true);
+    // setError(null);
+
+    
     setLoading(true);
-    setPopup(true);
+    setPopup(true); // <-- Forzamos la apertura aquí
+    // setTaskId(null); 
     setError(null);
+    
+    setActionHistory(prev => ({ 
+        ...prev, 
+        procesar: { status: 'procesando', msgKey: 'atestados.msg.processing' } 
+    }));
 
     const formData = new FormData();
     formData.append('file', file);
@@ -125,28 +231,84 @@ const ARTICULOS_DEFAULT = [
       const response = await axios.post('http://localhost:8000/procesarG/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setResultado(response.data);
-      setActionHistory(prev => ({ ...prev, procesar: { status: 'ok', msg: t('atestados.messages.success') }}));
-      setDebugJson(response.data); // Guardamos para mostrar abajo
+
+      // 2. Si el backend nos da un ID, empezamos a preguntar
+      if (response.data.task_id) {
+        // 3. Guardamos el ID, esto activará el useEffect de arriba automáticamente
+        setTaskId(response.data.task_id);
+      } else {
+        throw new Error("No se recibió task_id");
+      }
+
+      // setResultado(response.data);
+      // setActionHistory(prev => ({ ...prev, procesar: { status: 'ok', msg: t('atestados.messages.success') }}));
+      // setDebugJson(response.data); // Guardamos para mostrar abajo
     } catch (err) {
       console.error(err);
       // setError("Error al procesar el documento. Inténtalo de nuevo.");
       setActionHistory(prev => ({ ...prev, procesar: { status: 'error', msg: err.message }}));
     } finally {
-      setLoading(false);
-      setPopup(false);
+      // setLoading(false);
+      // setPopup(false);
     }
   };
 
-  const descargarRDF = async () => {
+  // --- Función para procesar el JSON cargado manualmente ---
+  const handleManualJsonUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsedJson = JSON.parse(event.target.result);
+        setDebugJson(parsedJson); // Guardamos el JSON cargado
+        setResultado(parsedJson);
+        console.log(parsedJson)
+        // Una vez cargado, lanzamos la inferencia automáticamente
+        descargarRDF(parsedJson);
+      } catch (err) {
+        alert("Error: El archivo seleccionado no es un JSON válido.");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // --- Función unificada de Inferencia (RDF) ---
+  const handleGenRDFClick = () => {
+    if (resultado) {
+      // Caso A: Ya tenemos el resultado en memoria
+      descargarRDF(resultado);
+    } else {
+      // Caso B: No hay resultado, solicitamos el fichero
+      jsonFileInputRef.current.click();
+    }
+  };
+
+  const handleInferirClick = () => {
+    if (resultado) {
+      // Caso A: Ya tenemos el resultado en memoria
+      handleInferencia(resultado);
+    } else {
+      // Caso B: No hay resultado, solicitamos el fichero
+      jsonFileInputRef.current.click();
+    }
+  };
+
+  
+
+  const descargarRDF = async (json) => {
     try {
-      const response = await axios.post("http://localhost:8000/generar_rdfG/", resultado, {
+      
+      const response = await axios.post("http://localhost:8000/generar_rdfG/", json, {
         responseType: 'blob'   
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', resultado.nombre_grafo + '.rdf');
+      link.setAttribute('download', json.nombre_grafo + '.rdf');
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -159,14 +321,14 @@ const ARTICULOS_DEFAULT = [
     }
   };
 
-  const handleInferencia = async () => {
+  const handleInferencia = async (json) => {
     if (!resultado) return;
     setInferring(true);
     setError(null);
 
     try {
         // 1. Petición con responseType blob
-        const response = await axios.post("http://localhost:8000/inferir_grafo_ttls/", resultado, {
+        const response = await axios.post("http://localhost:8000/inferir_grafo_ttls/", json, {
         responseType: 'blob'   
         });
 
@@ -178,7 +340,7 @@ const ARTICULOS_DEFAULT = [
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', resultado.nombre_grafo + '.ttls');
+        link.setAttribute('download', json.nombre_grafo + '.ttls');
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -229,7 +391,8 @@ const ARTICULOS_DEFAULT = [
       setActionHistory(prev => ({ ...prev, neo4j: { status: 'error', msg: response.data.mensaje }}));
    }
   } catch (err) {
-    setActionHistory(prev => ({ ...prev, neo4j: { status: 'error', msg: response.data.mensaje }}));
+    console.error("Error en la inferencia:", err);
+    setActionHistory(prev => ({ ...prev, neo4j: { status: 'error', msg: 'response.data.mensaje' }}));
     // setError("Error en Neo4j: " + (err.response?.data?.detail || err.message));
   } finally {
     setImporting(false);
@@ -242,6 +405,13 @@ const ARTICULOS_DEFAULT = [
     <div className="atestados-wrapper">
       <h1>{t('atestados.principalTitle')}</h1>
       <p className="subtitulo">{t('atestados.subtitle')}</p>
+      <input 
+        type="file" 
+        ref={jsonFileInputRef} 
+        style={{ display: 'none' }} 
+        accept=".json"
+        onChange={handleManualJsonUpload}
+      />
 
       {/* Indicador visual de pasos */}
       <div className="pasos">
@@ -269,7 +439,7 @@ const ARTICULOS_DEFAULT = [
           aria-label= {t('atestados.btns.select')}
         >
           <FiUpload style={{ marginRight: '8px' }} />
-          {t('atestados.btns.select')}
+          1. {t('atestados.btns.select')}
         </button>
 
         {/* BOTÓN 2: PROCESAR */}
@@ -280,11 +450,11 @@ const ARTICULOS_DEFAULT = [
           aria-label={t('atestados.btns.process')}
         >
           {loading ? <FiLoader className="spinner-mini" /> : <FiSearch style={{ marginRight: '8px' }} />}
-          {t('atestados.btns.process')}
+          2. {t('atestados.btns.process')}
         </button>
 
         {/* BOTÓN 3: DESCARGAR */}
-        <button 
+        {/* <button 
           className="btn descargar-btn" 
           onClick={descargarRDF} 
           disabled={!resultado || loading}
@@ -292,17 +462,37 @@ const ARTICULOS_DEFAULT = [
         >
           <FiDownload style={{ marginRight: '8px' }} />
           {t('atestados.btns.download')}
-        </button>
+        </button> */}
+
+        {/* BOTÓN MODIFICADO: Siempre habilitado (salvo si está cargando) */}
+          <button 
+            className="btn descargar-btn" 
+            onClick={handleGenRDFClick} 
+            disabled={loading}
+            title={!resultado ? t('atestados.btns.download_tooltip') : t('atestados.btns.download')}
+          >
+            <FiDownload style={{ marginRight: '8px' }} />
+           3. {t('atestados.btns.download')} {(!resultado ? '*' : '')}
+          </button>
 
         {/* BOTÓN 4: INFERIR (NUEVO) */}
         <button 
           className="btn inferir-btn" 
-          onClick={handleInferencia} 
+          onClick={handleInferirClick} 
           disabled={!resultado || loading}
         >
           {inferring ? <FiLoader className="spinner-mini" /> : <FiShare2 style={{ marginRight: '8px' }} />}
-          {t('atestados.btns.infer')}
+          4. {t('atestados.btns.infer')}
         </button>
+
+        {/* <button 
+          className="btn inferir-btn" 
+          onClick={handleInferirClick} 
+          disabled={loading}
+        >
+          {inferring ? <FiLoader className="spinner-mini" /> : <FiShare2 style={{ marginRight: '8px' }} />}
+          {t('atestados.btns.infer')}
+        </button> */}
 
         {/* BOTÓN 5: IMPORTAR A NEO4J */}
         <button 
@@ -311,7 +501,7 @@ const ARTICULOS_DEFAULT = [
           disabled={!ttlBlob || loading}
         >
           {importing ? <FiLoader className="spinner-mini-import" /> : <FiDatabase style={{ marginRight: '8px' }} />}
-          {t('atestados.btns.import')}
+          5. {t('atestados.btns.import')}
         </button>
       </div>
 

@@ -13,7 +13,7 @@ export default function Navbar() {
       <div className="navbar-container">
         <Link to="/" className="navbar-left" style={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={logo} alt="Logo" className="navbar-logo" />
-          <h2 className="navbar-title">ReportGraphQualifier</h2>
+          <h2 className="navbar-title">OntoPropertyCrime</h2>
         </Link>
         <button className="navbar-toggle" onClick={() => setOpen(!open)}>
           {open ? <FiX /> : <FiMenu />}

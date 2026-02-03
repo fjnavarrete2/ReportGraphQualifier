@@ -3,7 +3,7 @@ import tempfile
 import json
 import datetime
 import time
-from fastapi import APIRouter, FastAPI, File, Form, Response, UploadFile, HTTPException, Query
+from fastapi import APIRouter, FastAPI, File, Form, Response, UploadFile, HTTPException, Query, BackgroundTasks
 from platformdirs import user_downloads_path
 import urllib
 from rdfFile import crear_rdf2 
@@ -351,71 +351,92 @@ async def cargar_ontologia(file: UploadFile = File(...)):
             detail=f"Error cargando ontología: {str(e)}"
         )
 
-# # Ruta de api para procesar atestados (tu código original)
-# @app.post("/procesar/")
-# async def procesar_atestado(file: UploadFile):
-#     """Procesa un atestado subido por el usuario.
-
-#     Lee el archivo proporcionado (PDF o DOCX), lo envía al árbol de
-#     decisión basado en LLM y, si procede, genera una descripción
-#     resumida del atestado.
-
-#     Parameters
-#     ----------
-#     file: UploadFile
-#         Archivo que contiene el atestado en formato PDF o DOCX.
-
-#     Returns
-#     -------
-#     dict | str
-#         Diccionario con los datos del ``Atestado`` y su descripción o
-#         un mensaje de error/estado en caso de que no se determine un
-#         atestado válido.
-#     """
-#     try:
-#         extension = os.path.splitext(file.filename)[1].lower()
-#         contenido = await file.read()
-
-#         temp_path = f"/tmp/{file.filename}"
-#         print(f"temp_path = {temp_path}")
-#         with open(temp_path, "wb") as f:
-#             f.write(contenido)
-
-#         if extension == ".pdf":
-#             texto = leer_pdf(temp_path)
-#         elif extension == ".docx":
-#             texto = leer_docx(temp_path)
-#         else:
-#             return {"error": "Formato de archivo no soportado. Usa PDF o DOCX."}
-        
-#         resultado = decisionTree.delitoPropiedad(decisionTree.AtestadoLLM(texto)) 
-
-#         '''
-#         resultado = decisionTree.analizarAtestado(decisionTree.AtestadoLLM(texto))
-#         '''
-
-#         if isinstance(resultado, Atestado):
-#             descripcion = generar_descripcion(resultado)
-#         else:
-#             descripcion = resultado
-
-#         print(f"Descripción generada: {descripcion}")
-
-#         if isinstance(resultado, Atestado):
-#             resultado_dict = resultado.model_dump()
-#             resultado_dict["descripcion"] = descripcion
-#             # print(f"Resultado del procesamiento: {resultado_dict}")
-#             return resultado_dict
-#         else:
-#             resultado_str = str(resultado)
-#             # print(f"Resultado del procesamiento: {resultado_str}")
-#             return resultado_str
-
-#     except Exception as e:
-#         return {"error": str(e)}
+# Diccionario para almacenar el estado de las tareas largas
+# En una app real, usarías Redis o una DB
+tareas_en_curso = {}
     
 # Ruta de api para procesar atestados (tu código original)
 @app.post("/procesarG/")
+async def endpoint_procesa_g(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+    # 1. Generamos un ID único para esta tarea
+    task_id = str(uuid.uuid4())
+    tareas_en_curso[task_id] = {"status": "procesando", "result": None}
+
+    try:
+        # 2. IMPORTANTE: Leemos el contenido del archivo ANTES de que termine el request
+        # Si no lo hacemos, el archivo se cierra y la tarea de fondo fallará.
+        # contenido_archivo = await file.read()
+        # filename = file.filename
+        extension = os.path.splitext(file.filename)[1].lower()
+        nombre = clean_uri(os.path.splitext(file.filename)[0])
+        
+        # 1. Leer el contenido del archivo directamente a memoria
+        contenido_bytes = await file.read()
+
+        # 2. Extraer texto sin guardar en disco
+        # Nota: Asegúrate de que tus funciones leer_pdf/leer_docx acepten bytes 
+        # o usa io.BytesIO para simular un archivo en memoria
+        
+        file_memory = io.BytesIO(contenido_bytes)
+        contenido_archivo = leer_pdf_memoria(file_memory) if extension == ".pdf" else leer_docx_memoria(file_memory)
+
+
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"No se pudo leer el archivo: {str(e)}")
+
+    # 3. Lanzamos la tarea pesada pasando los datos ya leídos
+    background_tasks.add_task(tarea_pesada_wrapper, task_id, contenido_archivo, nombre)
+
+    # 4. Respondemos de inmediato al frontend
+    return {"task_id": task_id, "message": "Procesamiento de atestado iniciado"}
+
+def tarea_pesada_wrapper(task_id: str, texto: str, nombre: str):
+    """
+    Wrapper que envuelve la lógica real de procesar_atestadoG.
+    """
+    try:
+        # Aquí llamarías a tu función original. 
+        # Si tu función original esperaba un UploadFile, 
+        # puede que debas refactorizarla para aceptar bytes o guardarlo en un temp file.
+
+        # Recuperar el listado de clases en profundidad
+        traversal = get_ontology_traversal()
+        if not traversal.ontology:
+            raise HTTPException(
+                status_code=500,
+                detail="No hay ontología cargada en el sistema"
+            )
+ 
+        resultado_la = decisionTree.analizarAtestado(decisionTree.AtestadoLLM(texto), nombre, json.loads(CLASSES_TO_ANALYSE), traversal)
+        
+        import time
+        time.sleep(5) # Simulación de procesamiento de LLM/Grafos
+        
+        resultado = {
+            "archivo_procesado": nombre,
+            "grafo_json": resultado_la, # Tus datos reales aquí
+            "analisis": "Atestado analizado correctamente"
+        }
+
+        # Actualizamos el estado al finalizar
+        tareas_en_curso[task_id] = {"status": "completado", "result": resultado}
+        
+    except Exception as e:
+        print(f"Error procesando {task_id}: {e}")
+        tareas_en_curso[task_id] = {"status": "error", "error": str(e)}
+
+@app.get("/check_task/{task_id}")
+def check_task(task_id: str):
+    task = tareas_en_curso.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada o ID inválido")
+    return task
+
+
+
+
+
 async def procesar_atestadoG(file: UploadFile):
     """Procesa un atestado subido por el usuario.
 

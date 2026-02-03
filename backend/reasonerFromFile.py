@@ -264,10 +264,12 @@ def reasoner_ttls(tmp_path,  data: list[AnalisisAtestado]):
         
         user_onto.imported_ontologies.append(base_onto)
 
-        # # --- ESTADO 1.1: World con individuos ANTES de razonar ---
-        # pre_reasoning_path = tmp_path.replace(".rdf", "_PRE_RAZONADO.owl")
-        # world.save(file=pre_reasoning_path, format="rdfxml")
-        # print(f"[1] Guardado pre-razonamiento: {pre_reasoning_path}")
+        # --- ESTADO 1.1: World con individuos ANTES de razonar ---
+        pre_reasoning_path = tmp_path.replace(".rdf", "_PRE_RAZONADO.owl")
+        pre_reasoning_path = pre_reasoning_path.replace("/tmp/", "/app/import/")
+        print(f"[1] Guardado pre-razonamiento: {pre_reasoning_path}")
+        world.save(file=pre_reasoning_path, format="rdfxml")
+        
 
         # 2. Razonamiento (Pellet es necesario para SWRL e INDIRECT_is_a complejos)
         with base_onto:

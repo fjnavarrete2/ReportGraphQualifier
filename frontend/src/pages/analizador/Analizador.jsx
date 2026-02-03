@@ -225,7 +225,7 @@ const verResultados = async () => {
         >
           <FiUpload style={{ marginRight: '6px' }} />
           {/* Cambiamos el texto dinámicamente para feedback visual */}
-          {file ? file.name : t('analizador.btns.select')}
+          1. {file ? file.name : t('analizador.btns.select')}
         </label>
 
 
@@ -237,7 +237,7 @@ const verResultados = async () => {
           style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}
         >
           <FiDownload aria-hidden="true" style={{ marginRight: '6px' }} />
-          {t('analizador.btns.references')}
+          2. {t('analizador.btns.references')}
         </button>
         {/* ----------------------------- */}
 
@@ -249,7 +249,7 @@ const verResultados = async () => {
           aria-label="Resumen Atestado"
         >
           <FiSearch aria-hidden="true" style={{ marginRight: '6px' }} />
-          {t('analizador.btns.summary')}
+          3. {t('analizador.btns.summary')}
         </button>
         
         {/* Botón Resultado */}
@@ -261,7 +261,7 @@ const verResultados = async () => {
         >
           {/* <FiRotateCw aria-hidden="true" style={{ marginRight: '6px' }} /> */}
           <FiRotateCw aria-hidden="true" style={{ marginRight: '6px' }} />
-          {t('analizador.btns.results')}
+          4. {t('analizador.btns.results')}
         </button>
       </div>
 
