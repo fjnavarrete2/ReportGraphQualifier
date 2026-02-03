@@ -3,17 +3,19 @@ backend/import/*.*
 
 
 # Python
-__pycache__/
-*.py[cod]
-.venv/
-.env
+backend/__pycache__/
+backend/*.py[cod]
+backend/.venv/
+backend/.env
 
 
 # Node/React
-node_modules/
-dist/
-.eslintcache
+frontend/node_modules/
+frontend/dist/
+frontend/.eslintcache
 
 # IDEs
-.vscode/
-.devcontainer/ (opcional: súbelo si quieres compartir tu config de VS Code)
+frontend/.vscode/
+frontend/.devcontainer/ (opcional: súbelo si quieres compartir tu config de VS Code)
+backend/.vscode/
+backend/.devcontainer/
