@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // 1. IMPORTACIÓN FALTANTE
+import axios from 'axios';
 import { 
   useReactTable, 
   getCoreRowModel, 
@@ -8,11 +8,18 @@ import {
   getPaginationRowModel, 
   flexRender 
 } from '@tanstack/react-table';
-// 2. AÑADIDOS FiX y FiLoader
-import { FiArrowLeft, FiSearch, FiActivity, FiList, FiX, FiLoader, FiShare2, FiLayers, FiGitCommit } from 'react-icons/fi';
-import { useApp } from '../../AppContext'; // 3. IMPORTACIÓN DEL CONTEXTO
+import { FiArrowLeft, FiSearch, FiActivity, FiList, FiX, FiLoader, FiShare2, FiLayers, FiGitCommit, FiInfo } from 'react-icons/fi';
+
+// Importaciones para el tooltip
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/shift-away.css';
+
+import { useApp } from '../../AppContext';
 import './Analizador.css';
-import VisualizadorGrafo from './VisualizadorGrafo'; // Importante para el modal
+import VisualizadorGrafo from './VisualizadorGrafo';
+
+
 
 const DataTable = ({ data, columns, title, icon: Icon }) => {
   const { t } = useApp();
@@ -67,7 +74,7 @@ const DataTable = ({ data, columns, title, icon: Icon }) => {
           ))}
         </tbody>
       </table>
-      {/* Controles de paginación se mantienen igual */}
+      
       <div className="pagination-controls" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
         <div className="page-size-selector">
           <span style={{ fontSize: '0.85rem', marginRight: '8px' }}>
@@ -98,28 +105,20 @@ const DataTable = ({ data, columns, title, icon: Icon }) => {
         </div>
       </div>
     </div>
-    
   );
 };
 
 export default function ResultadoGrafo() {
   const navigate = useNavigate();
   const { t } = useApp();
-  // const [data, setData] = useState({ resultados: [] });
-  
-  // 4. USAMOS EL CONTEXTO EN LUGAR DE LOCALSTORAGE PARA SEGURIDAD
   const { debugJson } = useApp();
 
-  // ESTADOS PARA EL MODAL
   const [modalOpen, setModalOpen] = useState(false);
   const [loadingModal, setLoadingModal] = useState(false);
   const [datosResumen, setDatosResumen] = useState(null);
   const [articuloSeleccionado, setArticuloSeleccionado] = useState("");
-  const [modalView, setModalView] = useState(""); // "grafo" o "resumen"
-  // const [nombreAtestado, setNombreAtestado] = useState("");
+  const [modalView, setModalView] = useState(""); 
 
-  // 1. INICIALIZACIÓN ESTABLE: Leemos directamente de sessionStorage al crear el estado
-  // Esto garantiza que los datos estén disponibles desde el MILISEGUNDO 1.
   const [data, setData] = useState(() => {
     const raw = sessionStorage.getItem('datos_resultado_grafo');
     if (raw) {
@@ -144,21 +143,65 @@ export default function ResultadoGrafo() {
     return "";
   });
 
-  // useEffect(() => {
-  //   const raw = sessionStorage.getItem('datos_resultado_grafo');
-  //   if (raw) {
-  //     const parsedData = JSON.parse(raw);
-  //     const resultadosFormateados = (parsedData.resultados_probabilidad || []).map(rel => ({
-  //       articulo: rel[0],
-  //       probabilidad: rel[1],
-  //       incertidumbre: rel[2],
-  //       propiedades: rel[4]
-  //     }));
-  //     setNombreAtestado(parsedData.name || "");
-  //     setData({ resultados: resultadosFormateados });
-  //   }
-  // }, []);
+  // Componente Leyenda para la columna Incertidumbre
+  const LeyendaIncertidumbre = () => (
+    <Tippy
+      theme="custom-opaque"
+      animation="shift-away"
+      interactive={true}
+      placement="bottom-start"
+      maxWidth={300}
+      content={
+         <div style={{ padding: '8px', textAlign: 'left', fontFamily: 'Segoe UI, sans-serif' }}>
+          <div style={{ 
+            marginBottom: '8px', 
+            fontWeight: 'bold', 
+            color: '#1976d2', 
+            borderBottom: '1px solid #555', 
+            paddingBottom: '4px',
+            fontSize: '0.9rem'
+          }}>
+            {t('resultado.info_caracteristica.titulo')}
+          </div>
+          
+          <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <span style={{ color: '#28a745', fontSize: '1rem', marginTop: '1px' }}>●</span>
+            <span style={{ fontSize: '0.8rem', color: '#eee', lineHeight: '1.4' }}>
+              <strong style={{ color: '#28a745' }}>{t('resultado.info_caracteristica.cabecera_presente')}</strong>
+              {t('resultado.info_caracteristica.cuerpo_presente')}
+            </span>
+          </div>
 
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <span style={{ color: '#dc3545', fontSize: '1rem', marginTop: '1px' }}>●</span>
+            <span style={{ fontSize: '0.8rem', color: '#eee', lineHeight: '1.4' }}>
+              <strong style={{ color: '#dc3545' }}>{t('resultado.info_caracteristica.cabecera_ausente')}</strong>
+              {t('resultado.info_caracteristica.cuerpo_ausente')}
+              <u>{t('resultado.info_caracteristica.cuerpo_ausente2')}</u>
+              {t('resultado.info_caracteristica.cuerpo_ausente3')}
+            </span>
+          </div>
+        </div>
+      }
+    >
+      <div style={{ 
+        display: 'inline-flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        cursor: 'help', 
+        marginLeft: '6px',
+        color: '#666',
+        transition: 'color 0.2s',
+        verticalAlign: 'middle'
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.color = '#1976d2'}
+      onMouseLeave={(e) => e.currentTarget.style.color = '#666'}
+      title="" // Eliminamos title nativo para que no moleste
+      >
+        <FiInfo size={16} />
+      </div>
+    </Tippy>
+  );
 
   const abrirModal = async (articuloOriginal, tipoVista) => {
     setArticuloSeleccionado(articuloOriginal.replace(/ns0__/g, ''));
@@ -169,16 +212,12 @@ export default function ResultadoGrafo() {
 
     try {
       const formData = new FormData();
-      console.log("root_name: " + nombreAtestado);
-      console.log("articuloOriginal.replace(/ns0__/g, ''): " + articuloOriginal.replace(/ns0__/g, ''));
       formData.append("root_name", nombreAtestado); 
       formData.append("article", articuloOriginal.replace(/ns0__/g, ''));
       
       const response = await axios.post("http://localhost:8000/recuperarTuplasGrafo/", formData);
       if (response.data.status === "ok") {
-        //formateo
         const parsedData = response.data;
-        // Transformamos los arrays de Relaciones a Objetos
         const relacionesFormateadas = (parsedData.relaciones || []).map(rel => ({
           referencia: rel[0],
           origen: rel[1],
@@ -188,7 +227,6 @@ export default function ResultadoGrafo() {
           texto_ref: rel[5]
         }));
 
-        // Transformamos los arrays de Nodos a Objetos
         const nodosFormateados = (parsedData.nodos || []).map(nodo => ({
           nombre: nodo[0],
           etiquetas: nodo[1],
@@ -211,54 +249,71 @@ export default function ResultadoGrafo() {
     }
   };
 
-  // Definición de columnas para las tablas dentro del modal
+  const renderMultiLineTooltip = (texto) => {
+    if (!texto) return null;
+    const frases = texto.split('|');
+    return (
+      <div style={{ textAlign: 'left', padding: '5px' }}>
+        {frases.map((frase, index) => (
+          <div key={index} style={{ marginBottom: '8px', fontSize: '0.8rem', borderLeft: '2px solid #1976d2', paddingLeft: '8px' }}>
+            {frase.trim()}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const colRelaciones = useMemo(() => [
-          { 
-          header: t('grafo.cols.ref'), 
-          accessorKey: 'referencia', 
-          cell: (info) => {
-              const valor = info.getValue();
-              const textoReferencia = info.row.original.texto_ref; // Asumiendo que texto_ref es un string directo del objeto
+    { 
+      header: t('grafo.cols.ref'), 
+      accessorKey: 'referencia', 
+      cell: (info) => {
+          const valor = info.getValue();
+          const textoReferencia = info.row.original.texto_ref; 
 
-              // Validamos si el valor es nulo, vacío o la palabra "none"
-              if (!valor || valor.toString().toLowerCase() === 'none' || valor.toString().trim() === '') {
-                  return null; // No renderiza nada en la celda
-              }
-
-              return (
-                  <div className="ref-circle-container">
-                      <span 
-                          className="ref-circle-badge" 
-                          title={textoReferencia} 
-                      >
-                          {valor}
-                      </span>
-                  </div>
-              );
+          if (!valor || valor.toString().toLowerCase() === 'none' || valor.toString().trim() === '') {
+              return null; 
           }
-      },
+
+          return (
+              <div className="ref-circle-container">
+                  <Tippy 
+                    content={renderMultiLineTooltip(textoReferencia)} 
+                    theme="custom-opaque" 
+                    animation="shift-away"
+                    allowHTML={true}
+                    maxWidth={400}
+                    interactive={true}
+                  >
+                    <span className="ref-circle-badge" style={{ cursor: 'zoom-in' }}>
+                        {valor}
+                    </span>
+                  </Tippy>
+              </div>
+          );
+      }
+    },
     { header: t('grafo.cols.origin'), accessorKey: 'origen' },
     { header: t('grafo.cols.relation'), accessorKey: 'relacion', cell: info => info.getValue()?.replace(/ns0__/g, '') },
     { header: t('grafo.cols.dest'), accessorKey: 'destino' },
     { 
-    header: t('grafo.type'), 
-    accessorKey: 'tipo', // Usamos el campo tipo para aplicar el color
-    cell: info => {
-      const tipo = info.getValue()?.toString().toLowerCase().trim();
-      let color = 'black'; // Color por defecto
+      header: t('grafo.type'), 
+      accessorKey: 'tipo', 
+      cell: info => {
+        const tipo = info.getValue()?.toString().toLowerCase().trim();
+        let color = 'black'; 
 
-      if (tipo === 'necessary') color = '#28a745';      // Verde
-      else if (tipo === 'surplus') color = '#e67e22';   // Naranja oscuro
-      else if (tipo === 'created') color = '#dc3545';   // Rojo
+        if (tipo === 'necessary') color = '#28a745';      
+        else if (tipo === 'surplus') color = '#e67e22';   
+        else if (tipo === 'created') color = '#dc3545';   
 
-      return (
-        <span style={{ color: color, fontWeight: '600' }}>
-          {/* Mostramos el nombre de la relación (r.relacion) pero con el color del tipo */}
-          {info.getValue()}
-        </span>
-      );
-    }
-  },,
+        return (
+          <span style={{ color: color, fontWeight: '600' }}>
+            {info.getValue()}
+          </span>
+        );
+      }
+    },
   ], []);
 
   const colNodos = useMemo(() => [
@@ -280,14 +335,13 @@ export default function ResultadoGrafo() {
       meta: { headerClass: 'col-porcentaje', cellClass: 'col-porcentaje' },
       cell: info => `${(parseFloat(info.getValue()) * 100).toFixed(2)}%`
     },
-    // { 
-    //   header: t('resultado.col_uncert'), 
-    //   accessorKey: 'incertidumbre',
-    //   meta: { headerClass: 'col-porcentaje', cellClass: 'col-porcentaje' },
-    //   cell: info => `${(parseFloat(info.getValue()) * 100).toFixed(2)}%`
-    // },
     { 
-      header: t('resultado.col_props'), 
+      header: () => (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {t('resultado.col_props')}
+          <LeyendaIncertidumbre />
+        </div>
+      ),
       accessorKey: 'propiedades',
       cell: info => {
         const val = info.getValue();
@@ -321,7 +375,7 @@ export default function ResultadoGrafo() {
         <button 
           className="btn-resumen-tabla" 
           title="Ver tabla de resumen" 
-          onClick={() => abrirModal(info.row.original.articulo, 'resumen')} //abrirResumenArticulo(info.row.original.articulo)}
+          onClick={() => abrirModal(info.row.original.articulo, 'resumen')} 
         >
           {loadingModal && articuloSeleccionado === info.row.original.articulo.replace(/ns0__/g, '') ? 
             <FiLoader className="spinner-icon" /> : <FiList />
@@ -338,7 +392,7 @@ export default function ResultadoGrafo() {
         </button>
       )
     }
-  ], [loadingModal, articuloSeleccionado]);
+  ], [loadingModal, articuloSeleccionado, t]);
 
   return (
     <div className="atestados-wrapper full-width">
@@ -377,12 +431,10 @@ export default function ResultadoGrafo() {
               ) : datosResumen ? (
                 <div className="fade-in" style={{ flex: 1, display: 'flex' }}>
                   {modalView === 'grafo' ? (
-                    //<div style={{ height: 'calc(100vh - 0px)', background: '#fff', border: '1px solid #ddd' }}>
                     <div className="canvas-container-modal">
                       <VisualizadorGrafo data={datosResumen} />
                     </div>
                   ) : (
-                    /* --- VISTA RESUMEN: TABLAS A TODA ANCHURA --- */
                     <div className="full-width-tables" style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '100%' }}>
                       <DataTable 
                         title={t('resultado.modal.ontology_rel')}

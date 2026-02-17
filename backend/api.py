@@ -1245,7 +1245,8 @@ def buscar_y_marcar(texto: str, frag: str, badge_html: str, tooltip_text: str, i
 
     # Creamos el envoltorio con tooltip. 
     # Usamos el atributo 'title' para el tooltip nativo del navegador.
-    enriquecimiento = f'<strong title="{tooltip_text}">{fragmento}</strong>{badge_html}'
+    # enriquecimiento = f'<strong title="{tooltip_text}">{fragmento}</strong>{badge_html}'
+    enriquecimiento = f'<strong>{fragmento}</strong>{badge_html}'
 
     # 1. Intento exacto
     patron_exacto = re.compile(re.escape(fragmento), re.IGNORECASE)
@@ -1264,7 +1265,8 @@ def buscar_y_marcar(texto: str, frag: str, badge_html: str, tooltip_text: str, i
         if patron_sub.search(texto):
             print(f"\t✔ Encontrado parcial {i}: {fragmento}")
             # Re-generamos el enriquecimiento para la sub_frase
-            enriquecimiento_sub = f'<strong title="{tooltip_text}">{sub_frase}</strong>{badge_html}'
+            # enriquecimiento_sub = f'<strong title="{tooltip_text}">{sub_frase}</strong>{badge_html}'
+            enriquecimiento_sub = f'<strong>{sub_frase}</strong>{badge_html}'
             return patron_sub.sub(enriquecimiento_sub, texto, count=1)
     
     print("\t❌ No Encontrado " + str(i) + ": " + fragmento) 
@@ -1283,7 +1285,9 @@ def enriquecer_texto_con_estrategia(texto: str, referencias: List[Tuple]) -> str
         tooltip_info = f"{ref_tuple[0]} {ref_tuple[1]} {ref_tuple[2]}"
         
         # Estilo del badge (se mantiene igual, pero envuelto para soportar el tooltip si fuera necesario)
-        badge = f'<span class="badge" title="{tooltip_info}">{i}</span>'
+        badge = f'<span class="badge" tit="{tooltip_info}">{i}</span>'
+        # badge = f'<span class="badge" data-tooltip="{tooltip_info}">{i}</span>'
+        
         
         referencia_raw = str(ref_tuple[3])
         fragmentos = referencia_raw.split('|')
@@ -1309,7 +1313,7 @@ def generar_documento_html_azul(texto_contenido: str, article: str) -> str:
             /* Estilo para el texto con tooltip */
             strong {{ 
                 color: #2980b9; 
-                cursor: help; 
+                /*cursor: help; */
                 border-bottom: 1px dashed #2980b9; 
                 text-decoration: none;
             }}
@@ -1319,7 +1323,7 @@ def generar_documento_html_azul(texto_contenido: str, article: str) -> str:
                 border-radius: 50%; width: 22px; height: 22px; text-align: center; 
                 font-size: 13px; line-height: 22px; font-weight: bold; margin-left: 5px;
                 box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-                cursor: help;
+                cursor: pointer;
             }}
         </style>
     </head>

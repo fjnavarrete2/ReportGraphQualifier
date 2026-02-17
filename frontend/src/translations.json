@@ -133,6 +133,15 @@
       "col_props": "Características",
       "col_summary": "Resumen",
       "col_graph": "Grafo",
+      "info_caracteristica": {
+        "titulo": "Leyenda de Características",
+        "cabecera_presente": "Presente (Verde):",
+        "cuerpo_presente": " La característica aparece reflejada en los hechos del atestado.",
+        "cabecera_ausente": "Ausente (Rojo):",
+        "cuerpo_ausente": " Característica imprescindible para el artículo que",
+        "cuerpo_ausente2": " no aparece",
+        "cuerpo_ausente3": "  en los hechos."
+      },
       "modal": {
         "graph_title": "Visor de Grafo: ",
         "summary_title": "Tablas de Resumen: ",
@@ -264,7 +273,7 @@
         "select": "Select file",
         "references": "View Sources",
         "summary": "View Report Summary",
-        "results": "Report Results"
+        "results": "View Report Results"
       },
       "preview": {
         "no_file": "No file selected",
@@ -306,6 +315,15 @@
       "col_props": "Characteristics",
       "col_summary": "Summary",
       "col_graph": "Graph",
+      "info_caracteristica": {
+        "titulo": "Legend of Characteristics",
+        "cabecera_presente": "Present (Green):",
+        "cuerpo_presente": " The characteristic is reflected in the facts of the report.",
+        "cabecera_ausente": "Absent (Red):",
+        "cuerpo_ausente": " Essential characteristic for the item that does",
+        "cuerpo_ausente2": " not appear",
+        "cuerpo_ausente3": "  in the facts."
+      },
       "modal": {
         "graph_title": "Graph Viewer: ",
         "summary_title": "Summary Tables: ",
