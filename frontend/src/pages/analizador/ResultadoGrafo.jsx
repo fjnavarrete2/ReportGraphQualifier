@@ -105,7 +105,7 @@ const DataTable = ({ data, columns, title, icon: Icon }) => {
 export default function ResultadoGrafo() {
   const navigate = useNavigate();
   const { t } = useApp();
-  const [data, setData] = useState({ resultados: [] });
+  // const [data, setData] = useState({ resultados: [] });
   
   // 4. USAMOS EL CONTEXTO EN LUGAR DE LOCALSTORAGE PARA SEGURIDAD
   const { debugJson } = useApp();
@@ -116,22 +116,48 @@ export default function ResultadoGrafo() {
   const [datosResumen, setDatosResumen] = useState(null);
   const [articuloSeleccionado, setArticuloSeleccionado] = useState("");
   const [modalView, setModalView] = useState(""); // "grafo" o "resumen"
-  const [nombreAtestado, setNombreAtestado] = useState("");
+  // const [nombreAtestado, setNombreAtestado] = useState("");
 
-  useEffect(() => {
+  // 1. INICIALIZACIÓN ESTABLE: Leemos directamente de sessionStorage al crear el estado
+  // Esto garantiza que los datos estén disponibles desde el MILISEGUNDO 1.
+  const [data, setData] = useState(() => {
     const raw = sessionStorage.getItem('datos_resultado_grafo');
     if (raw) {
       const parsedData = JSON.parse(raw);
-      const resultadosFormateados = (parsedData.resultados_probabilidad || []).map(rel => ({
-        articulo: rel[0],
-        probabilidad: rel[1],
-        incertidumbre: rel[2],
-        propiedades: rel[4]
-      }));
-      setNombreAtestado(parsedData.name || "");
-      setData({ resultados: resultadosFormateados });
+      return {
+        resultados: (parsedData.resultados_probabilidad || []).map(rel => ({
+          articulo: rel[0],
+          probabilidad: rel[1],
+          incertidumbre: rel[2],
+          propiedades: rel[4]
+        }))
+      };
     }
-  }, []);
+    return { resultados: [] };
+  });
+
+  const [nombreAtestado, setNombreAtestado] = useState(() => {
+    const raw = sessionStorage.getItem('datos_resultado_grafo');
+    if (raw) {
+      return JSON.parse(raw).name || "";
+    }
+    return "";
+  });
+
+  // useEffect(() => {
+  //   const raw = sessionStorage.getItem('datos_resultado_grafo');
+  //   if (raw) {
+  //     const parsedData = JSON.parse(raw);
+  //     const resultadosFormateados = (parsedData.resultados_probabilidad || []).map(rel => ({
+  //       articulo: rel[0],
+  //       probabilidad: rel[1],
+  //       incertidumbre: rel[2],
+  //       propiedades: rel[4]
+  //     }));
+  //     setNombreAtestado(parsedData.name || "");
+  //     setData({ resultados: resultadosFormateados });
+  //   }
+  // }, []);
 
 
   const abrirModal = async (articuloOriginal, tipoVista) => {
@@ -143,6 +169,8 @@ export default function ResultadoGrafo() {
 
     try {
       const formData = new FormData();
+      console.log("root_name: " + nombreAtestado);
+      console.log("articuloOriginal.replace(/ns0__/g, ''): " + articuloOriginal.replace(/ns0__/g, ''));
       formData.append("root_name", nombreAtestado); 
       formData.append("article", articuloOriginal.replace(/ns0__/g, ''));
       
@@ -333,7 +361,7 @@ export default function ResultadoGrafo() {
       {/* VENTANA MODAL */}
       {modalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content full-screen">
+          <div className="modal-container">
             <div className="modal-header">
               <h2>
                 {modalView === 'grafo' ? <FiGitCommit /> : <FiList />} 
@@ -347,7 +375,7 @@ export default function ResultadoGrafo() {
               {loadingModal ? (
                 <div className="modal-loader"><div className="spinner" /><p>{t('common.loading')}</p></div>
               ) : datosResumen ? (
-                <div className="fade-in">
+                <div className="fade-in" style={{ flex: 1, display: 'flex' }}>
                   {modalView === 'grafo' ? (
                     //<div style={{ height: 'calc(100vh - 0px)', background: '#fff', border: '1px solid #ddd' }}>
                     <div className="canvas-container-modal">

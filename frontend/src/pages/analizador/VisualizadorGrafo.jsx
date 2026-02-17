@@ -6,7 +6,9 @@ import { useApp } from '../../AppContext';
 const VisualizadorGrafo = ({ data }) => {
   const { t } = useApp();
   const fgRef = useRef();
+  //const containerRef = useRef(); // Referencia para medir el contenedor
   const [zoomPercent, setZoomPercent] = useState(100);
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
   const gData = useMemo(() => ({
     nodes: data.nodos.map(n => ({
@@ -46,7 +48,32 @@ const VisualizadorGrafo = ({ data }) => {
         setZoomPercent(Math.round(fgRef.current.zoom() * 100));
       }, 800);
     }
-  }, [gData]);
+  }, [gData, dimensions]);
+
+  // 1. EFECTO PARA MEDIR EL CONTENEDOR AUTOMÁTICAMENTE
+  useEffect(() => {
+    const updateSize = () => {
+      if (fgRef.current) {
+        // setDimensions({
+        //   width: fgRef.current.offsetWidth,
+        //   height: fgRef.current.offsetHeight
+        // });
+        setDimensions({
+          width:  window.innerWidth,
+          height:  window.innerWidth
+        });
+        console.log("Dimension: " + fgRef.current.offsetWidth + ":" + fgRef.current.offsetHeight)
+        console.log("Other dimensions" + window.innerWidth + ":" + window.innerHeight)
+      }
+    };
+    console.log("Hola caracola" + fgRef.current)
+    // Medimos al montar
+    updateSize();
+
+    // Volvemos a medir si la ventana cambia de tamaño
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   // Definimos una función para determinar el color según el tipo
   const getColorPorTipo = (tipo) => {
@@ -62,7 +89,8 @@ const VisualizadorGrafo = ({ data }) => {
   };
 
   return (
-    <div className="resultado-card" style={{ height: '500px', padding: '0', position: 'relative', overflow: 'hidden' }}>
+    // <div className="resultado-card" style={{ height: '500px', padding: '0', position: 'relative', overflow: 'hidden' }}>
+    <div className="resultado-card" style={{ padding: '0', position: 'relative', overflow: 'hidden' }}>
       {/* Controles de Zoom e Info */}
       <div style={{ position: 'absolute', top: 15, right: 15, zIndex: 10, display: 'flex', gap: '10px' }}>
         <div style={{ background: '#1976d2', color: 'white', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
@@ -70,11 +98,19 @@ const VisualizadorGrafo = ({ data }) => {
         </div>
       </div>
 
+      {/* <button 
+        onClick={() => fgRef.current.zoomToFit(500, 10)}
+        style={{ position: 'absolute', top: '20px', left: '20px', padding: '10px 20px', backgroundColor: '#fff', border: '1px solid #1976d2', borderRadius: '30px', color: '#1976d2', fontWeight: 'bold', cursor: 'pointer', zIndex: 10 }}
+      >
+        <FiMaximize /> {t('grafo.adjust')}
+      </button> */}
+
       <ForceGraph2D
         ref={fgRef}
         graphData={gData}
         width={window.innerWidth * 0.9} 
-        height={500}
+        flex={1}// height={500}
+        height={window.innerHeight * 0.9}
         onZoom={handleZoom}
         d3AlphaDecay={0.05} // Simulación más lenta para que se expandan mejor
         d3VelocityDecay={0.7}
@@ -213,13 +249,6 @@ const VisualizadorGrafo = ({ data }) => {
           `;
         }}
       />
-
-      <button 
-        onClick={() => fgRef.current.zoomToFit(500, 10)}
-        style={{ position: 'absolute', bottom: '20px', right: '20px', padding: '10px 20px', backgroundColor: '#fff', border: '1px solid #1976d2', borderRadius: '30px', color: '#1976d2', fontWeight: 'bold', cursor: 'pointer', zIndex: 10 }}
-      >
-        <FiMaximize /> {t('grafo.adjust')}
-      </button>
     </div>
   );
 };
