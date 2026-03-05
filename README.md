@@ -1,41 +1,41 @@
-# 🏺 ReportGraphQualifier
+# 🏺 onto-property-crime
 
-**onto-property-crime** es un ecosistema desarrollado para **Atenea Research Group** enfocado en la gestión y calificación de grafos de conocimiento (Knowledge Graphs). El sistema permite la ingesta de datos semánticos, su almacenamiento en grafos y una interfaz visual para su análisis.
+**onto-property-crime** is an ecosystem developed for the **Atenea Research Group** focused on the management and qualification of knowledge graphs. The system allows for semantic data ingestion, its storage in graphs, and a visual interface for its analysis.
 
-## 🏗️ Arquitectura del Sistema
+## 🏗️ System Architecture
 
-El proyecto está completamente dockerizado y se compone de:
-* **Neo4j 5.x:** Base de datos de grafos con soporte RDF mediante `n10s` (neosemantics).
-* **FastAPI:** Backend en Python para la lógica de negocio y procesamiento de datos.
-* **React + Vite:** Frontend interactivo con Hot Reload configurado para entornos Docker.
+The project is fully dockerized and consists of:
+* **Neo4j 5.x:** Graph database with RDF support via `n10s` (neosemantics).
+* **FastAPI:** Python backend for business logic and data processing.
+* **React + Vite:** Interactive frontend with Hot Reload configured for Docker environments.
 
 ---
 
-## 📥 Instalación y Despliegue (Máquina Limpia)
+## 📥 Installation and Deployment (Clean Machine)
 
-Sigue estos pasos para desplegar el entorno desde cero:
+Follow these steps to deploy the environment from scratch:
 
-### Requisitos previos
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
-* [Git](https://git-scm.com/) instalado.
+### Prerequisites
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+* [Git](https://git-scm.com/) installed.
 
-### Clonar el repositorio
+### Clone the repository
 ```
 git clone https://github.com/atenearesearchgroup/onto-property-crime.git
 cd ReportGraphQualifier
 ```
 
-* Activación y arranque de los módulos del docker
+* Activation and startup of the docker modules
 ```
 docker-compose up -d
 ```
 
-* Comprobar que los módulos están activos
+* Check that the modules are running
 ```
 docker-compose ps
 ```
 
-* Resultado
+* Result
 ```
              Name                            Command               State                       Ports
 ------------------------------------------------------------------------------------------------------------------------
@@ -45,3 +45,9 @@ reportgraphqualifier_database_1   tini -g -- /startup/docker ...   Up      7473/
                                                                            0.0.0.0:7687->7687/tcp,:::7687->7687/tcp
 reportgraphqualifier_frontend_1   docker-entrypoint.sh npm r ...   Up      0.0.0.0:5173->5173/tcp,:::5173->5173/tcp
 ```
+
+---
+
+## 📝 SoftwareX Note to Reviewers
+
+> **Important Note:** In order to activate the information extraction module, reviewers must request the `OPENROUTER_API_KEY` for the `backend/.env` file by contacting **xxx@xxxx.xx** prior to using the tool.
