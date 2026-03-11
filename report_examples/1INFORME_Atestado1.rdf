@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:delpatrimonio="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdf:Description rdf:nodeID="N9f602049f7ac4bb492aba19e6f8b63e7">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:complementOf rdf:nodeID="N2f82efc8801a4df685560177c3306ff7"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#stolenBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>stolenBy</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Crema">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Libro_electrónico_Kindle_modelo_Oasis">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Mochila_marca_Targus_color_negro">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Objetos_personales">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#1INFORME_Atestado1">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Report"/>
+    <rdf:type rdf:nodeID="N9f602049f7ac4bb492aba19e6f8b63e7"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Mochila_marca_Targus_color_negro"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Cartera_con_documentación_diversa"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#55_euros"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Libro_electrónico_Kindle_modelo_Oasis"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Toalla"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Crema"/>
+    <delpatrimonio:stolenthing rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Objetos_personales"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Punishment">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#valor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>valor</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Toalla">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#usedByOwner">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>usedByOwner</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#55_euros">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#hasPreviusSentence">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>hasPreviusSentence</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N2f82efc8801a4df685560177c3306ff7">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#hasOffenceCharacteristic"/>
+    <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#RobberyCharacteristic"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Cartera_con_documentación_diversa">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods"/>
+    <delpatrimonio:ValueCost rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">450</delpatrimonio:ValueCost>
+    <delpatrimonio:belongsTo rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+    <delpatrimonio:stolenBy rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01"/>
+    <delpatrimonio:usedByOwner rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#belongsTo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>belongsTo</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Victim">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#StolenGoods">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#OCHENTA_Y_TRES_83_detenciones_anteriores">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Punishment"/>
+    <delpatrimonio:num rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">83</delpatrimonio:num>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#nombre">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>nombre</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Report">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#D01">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Accused"/>
+    <delpatrimonio:hasPreviusSentence rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#OCHENTA_Y_TRES_83_detenciones_anteriores"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#V01">
+    <rdf:type rdf:resource="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Victim"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#Accused">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#rango">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>rango</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/fjnavarrete/ontologies/2022/0/delito_contra_patrimonio#stolenthing">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>stolenthing</rdfs:label>
+  </rdf:Description>
+</rdf:RDF>
