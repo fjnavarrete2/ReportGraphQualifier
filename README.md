@@ -27,7 +27,7 @@ cd ReportGraphQualifier
 
 * Activation and startup of the docker modules
 ```
-docker-compose up -d
+docker-compose up -d 
 ```
 
 * Check that the modules are running
